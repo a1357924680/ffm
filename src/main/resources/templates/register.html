@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>家庭财务管理系统</title>
+    <script src="../js/jquery-3.2.0.min.js"></script>
+    <script  src="../js/register.js"></script>
+    <link href="../css/register.css" type="text/css" rel="stylesheet" />
+    <link href="../css/mainWindow.css" type="text/css" rel="stylesheet" />
+    <!--<script src="/js/jquery-3.2.0.min.js"></script>-->
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script  src="/js/register.js"></script>
+</head>
+<body>
+<div id="header">
+    <div id="ioc"><img class="sign" src="../images/ioc.png" /></div>
+    <h1>家庭财务管理系统</h1>
+</div>
+<div class="login-form">
+
+
+    <form id= "uploadForm" enctype="multipart/form-data" class="basic-grey" >
+    <div>
+        <div id="imgTable"><img id="preview" /><br/></div>
+
+    <br />
+        <span>头像：</span><input id="img" type="file" name="filePhoto" onchange="imgPreview(this)" /><br/>
+        <span>账号：</span><input  id="userId"  name="userId" placeholder="账号" type="text" /><br/>
+        <span>昵称：</span><input  id="username"  name="userName" placeholder="昵称" type="text" /><br/>
+        <span>密码：</span><input  id="password"  name="password" placeholder="密码" type="password" /><br/>
+        <span>确认：</span><input id="repassword"  name="repassword" placeholder="请再次输入密码" type="password"/><br/>
+        <span>性别：</span><select id="sex" name="sex"><br/>
+          <option value="0">男</option>
+          <option value="1">女</option>
+         </select><br/>
+        <span>手机：</span><input id="mobile"  name="mobile" placeholder="手机号" type="text"/>
+    </div><br/>
+        <div><br/>
+            <input type="button" id="register" value="注册"/>
+        </div>
+    </form>
+    <div>
+        <a href="/view/login">已有账号，直接登录</a>
+    </div>
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link href="../css/mainWindow.css" type="text/css" rel="stylesheet" />
+    <link href="../css/form-grey.css" type="text/css" rel="stylesheet" />
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script  src="../js/mainWindow.js"></script>
+    <script  src="../js/updateUser.js"></script>
+    <!--<link href="../css/mainWindow.css" type="text/css" rel="stylesheet" />-->
+    <!--<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>-->
+    <!--<script  src="../js/mainWindow.js"></script>-->
+</head>
+<body>
+
+<div id="header">
+    <div id="ioc"><img class="sign" src="../images/ioc.png" /></div>
+    <h1>家庭财务管理系统</h1>
+</div>
+
+<div id="nav">
+    <div class="model" id="sign01"><img class="sign" src="../images/sign01.png" /><br/>个人信息<br/></div>
+    <div class="model" id="sign02"><img class="sign" src="../images/sign02.png" /><br/>账单模块<br/></div>
+    <div class="model" id="sign03"><img class="sign" src="../images/sign03.png" /><br/>家庭模块<br/></div>
+    <div class="model" id="sign04"><img class="sign" src="../images/sign04.png" /><br/>退出登录<br/></div>
+</div>
+
+<div id="section" class="div3">
+    <!--<div id="action" class="btn">
+        <a href="/view/updateUser">修改用户</a>
+
+    </div>-->
+    <div id="userForm">
+        <form id= "updateForm" enctype="multipart/form-data" class="basic-grey" >
+            <div>
+                <div id="imgTable"><img id="preview" src="../images/ioc.png" /><br/></div>
+                <br />
+                <span>头像：</span><input id="img" type="file" name="filePhoto" onChange="imgPreview(this)" /><br/>
+                <span>昵称：</span><input  id="username"  name="userName" placeholder="昵称" type="text" th:value="${session.sessionUser.userName}" /><br/>
+                <span>密码：</span><input  id="password"  name="password" placeholder="密码" type="password"   /><br/>
+                <span>确认：</span><input id="repassword"  name="repassword" placeholder="请再次输入密码" type="password"   /><br/>
+                <span>性别：</span><select id="sex" name="sex"  th:value="${session.sessionUser.sex}"><br/>
+                <option value="0">男</option>
+                <option value="1">女</option>
+            </select><br/>
+                <span>手机：</span><input id="mobile"  name="mobile" placeholder="手机号" type="text"  th:value="${session.sessionUser.mobile}" />
+            </div><br/>
+            <div><br/>
+                <input type="button" id="update" value="修改" />
+            </div>
+        </form>
+    </div>
+
+
+
+
+</div>
+
+<div id="footer">
+    @家庭财务管理系统
+</div>
+</body>
+</html>

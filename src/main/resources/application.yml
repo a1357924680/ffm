@@ -1,0 +1,60 @@
+spring:
+  profiles:
+    active: dev
+  logging:
+    config: classpath:logback-spring.xml
+  datasource:
+    druid:
+      web-stat-filter:
+        enabled: true
+
+server:
+  port: 8080
+
+  datasource:
+      druid:
+        initial-size: 6
+        max-active: 6
+        min-idle: 5
+        max-wait: 30000
+        min-evictable-idle-time-millis: 60000
+        test-on-borrow: false
+        test-while-idle: true
+        test-on-return: false
+mybatis:
+  config-locations: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+ffm:
+  wxunUrl: http://121.40.60.163:8081/message/sendMsg
+  wxunName: 206
+  wxunPwd: zjlx206206
+  syUrl: http://send.18sms.com/msg/HttpBatchSendSM
+  syName: "006025"
+  syPwd: Sd123456
+  fcyuUrl: http://120.26.125.243/sms/openCard
+  fcyuName: lvxun
+  fcyPwd: mpqTo1Jf
+  fcyuKey: MK6q8HKW67KrBGkJ
+#  使用哪个短信平台  0：微讯  1：示远  2.发财鱼（后续会调用这个）
+  spare: 0
+#  是否关闭发短信的功能 0：可以发送  1：无法发送
+  closeSmsService: 1
+#  打开短信开关   0: 关闭短信服务   1：打开短信服务
+  isOpen: 0
+#开发环境
+---
+spring:
+  profiles: dev
+
+  datasource:
+    druid:
+      url: jdbc:mysql://106.15.225.38:3306/financial_management?useUnicode=true&amp;characterEncoding=UTF-8&autoReconnect=true
+      username: zyp
+      password: zyp
+#      driverClassName: com.mysql.jdbc.Driver
+
+
+
+
+

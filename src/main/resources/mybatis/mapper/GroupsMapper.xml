@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.family.financial.management.dao.mapper.GroupsMapper">
+  <resultMap id="BaseResultMap" type="com.family.financial.management.dao.entity.Groups">
+    <id column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="group_members" jdbcType="VARCHAR" property="groupMembers" />
+    <result column="ext_no1" jdbcType="BIGINT" property="extNo1" />
+    <result column="ext_no2" jdbcType="VARCHAR" property="extNo2" />
+    <result column="group_manager" jdbcType="BIGINT" property="groupManager" />
+    <result column="all_income" jdbcType="BIGINT" property="allIncome" />
+    <result column="all_spending" jdbcType="BIGINT" property="allSpending" />
+    <result column="balance" jdbcType="BIGINT" property="balance" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    group_id, group_name, group_members, ext_no1, ext_no2, group_manager, all_income, 
+    all_spending, balance
+  </sql>
+  <select id="selectByExample" parameterType="com.family.financial.management.dao.entity.GroupsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from groups
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from groups
+    where group_id = #{groupId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from groups
+    where group_id = #{groupId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.family.financial.management.dao.entity.GroupsExample">
+    delete from groups
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.family.financial.management.dao.entity.Groups" useGeneratedKeys="true" keyProperty="groupId">
+    insert into groups (group_id, group_name, group_members, 
+      ext_no1, ext_no2, group_manager, 
+      all_income, all_spending, balance
+      )
+    values (#{groupId,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{groupMembers,jdbcType=VARCHAR}, 
+      #{extNo1,jdbcType=BIGINT}, #{extNo2,jdbcType=VARCHAR}, #{groupManager,jdbcType=BIGINT}, 
+      #{allIncome,jdbcType=BIGINT}, #{allSpending,jdbcType=BIGINT}, #{balance,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.family.financial.management.dao.entity.Groups" useGeneratedKeys="true" keyProperty="groupId">
+    insert into groups
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="groupMembers != null">
+        group_members,
+      </if>
+      <if test="extNo1 != null">
+        ext_no1,
+      </if>
+      <if test="extNo2 != null">
+        ext_no2,
+      </if>
+      <if test="groupManager != null">
+        group_manager,
+      </if>
+      <if test="allIncome != null">
+        all_income,
+      </if>
+      <if test="allSpending != null">
+        all_spending,
+      </if>
+      <if test="balance != null">
+        balance,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupMembers != null">
+        #{groupMembers,jdbcType=VARCHAR},
+      </if>
+      <if test="extNo1 != null">
+        #{extNo1,jdbcType=BIGINT},
+      </if>
+      <if test="extNo2 != null">
+        #{extNo2,jdbcType=VARCHAR},
+      </if>
+      <if test="groupManager != null">
+        #{groupManager,jdbcType=BIGINT},
+      </if>
+      <if test="allIncome != null">
+        #{allIncome,jdbcType=BIGINT},
+      </if>
+      <if test="allSpending != null">
+        #{allSpending,jdbcType=BIGINT},
+      </if>
+      <if test="balance != null">
+        #{balance,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.family.financial.management.dao.entity.GroupsExample" resultType="java.lang.Long">
+    select count(*) from groups
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update groups
+    <set>
+      <if test="record.groupId != null">
+        group_id = #{record.groupId,jdbcType=BIGINT},
+      </if>
+      <if test="record.groupName != null">
+        group_name = #{record.groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.groupMembers != null">
+        group_members = #{record.groupMembers,jdbcType=VARCHAR},
+      </if>
+      <if test="record.extNo1 != null">
+        ext_no1 = #{record.extNo1,jdbcType=BIGINT},
+      </if>
+      <if test="record.extNo2 != null">
+        ext_no2 = #{record.extNo2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.groupManager != null">
+        group_manager = #{record.groupManager,jdbcType=BIGINT},
+      </if>
+      <if test="record.allIncome != null">
+        all_income = #{record.allIncome,jdbcType=BIGINT},
+      </if>
+      <if test="record.allSpending != null">
+        all_spending = #{record.allSpending,jdbcType=BIGINT},
+      </if>
+      <if test="record.balance != null">
+        balance = #{record.balance,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update groups
+    set group_id = #{record.groupId,jdbcType=BIGINT},
+      group_name = #{record.groupName,jdbcType=VARCHAR},
+      group_members = #{record.groupMembers,jdbcType=VARCHAR},
+      ext_no1 = #{record.extNo1,jdbcType=BIGINT},
+      ext_no2 = #{record.extNo2,jdbcType=VARCHAR},
+      group_manager = #{record.groupManager,jdbcType=BIGINT},
+      all_income = #{record.allIncome,jdbcType=BIGINT},
+      all_spending = #{record.allSpending,jdbcType=BIGINT},
+      balance = #{record.balance,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.family.financial.management.dao.entity.Groups">
+    update groups
+    <set>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupMembers != null">
+        group_members = #{groupMembers,jdbcType=VARCHAR},
+      </if>
+      <if test="extNo1 != null">
+        ext_no1 = #{extNo1,jdbcType=BIGINT},
+      </if>
+      <if test="extNo2 != null">
+        ext_no2 = #{extNo2,jdbcType=VARCHAR},
+      </if>
+      <if test="groupManager != null">
+        group_manager = #{groupManager,jdbcType=BIGINT},
+      </if>
+      <if test="allIncome != null">
+        all_income = #{allIncome,jdbcType=BIGINT},
+      </if>
+      <if test="allSpending != null">
+        all_spending = #{allSpending,jdbcType=BIGINT},
+      </if>
+      <if test="balance != null">
+        balance = #{balance,jdbcType=BIGINT},
+      </if>
+    </set>
+    where group_id = #{groupId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.family.financial.management.dao.entity.Groups">
+    update groups
+    set group_name = #{groupName,jdbcType=VARCHAR},
+      group_members = #{groupMembers,jdbcType=VARCHAR},
+      ext_no1 = #{extNo1,jdbcType=BIGINT},
+      ext_no2 = #{extNo2,jdbcType=VARCHAR},
+      group_manager = #{groupManager,jdbcType=BIGINT},
+      all_income = #{allIncome,jdbcType=BIGINT},
+      all_spending = #{allSpending,jdbcType=BIGINT},
+      balance = #{balance,jdbcType=BIGINT}
+    where group_id = #{groupId,jdbcType=BIGINT}
+  </update>
+</mapper>
