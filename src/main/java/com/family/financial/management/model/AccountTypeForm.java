@@ -10,7 +10,7 @@ public class AccountTypeForm {
     private Long topLeve;
 
 
-    private String img;
+    private String typeName;
 
     /**
      * 用户创建的记录用户的id
@@ -25,13 +25,12 @@ public class AccountTypeForm {
         this.topLeve = topLeve;
     }
 
-
-    public String getImg() {
-        return img;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public Long getUserId() {

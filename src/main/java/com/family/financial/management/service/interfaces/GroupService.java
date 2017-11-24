@@ -6,6 +6,7 @@ import com.family.financial.management.dao.entity.Groups;
 import com.family.financial.management.dao.entity.User;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.GroupInfoForm;
+import com.family.financial.management.model.Request;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface GroupService {
     List<Groups> findGroup(String groupInfo) throws FFMException;
     void applyForGroup(Long groupId,User user) throws FFMException;
     void handleGroupApply(Long id,User user,Long decide) throws FFMException;
-    List<GroupRequest> getGroupRequests(User user) throws FFMException;
+    List<Request> getGroupRequests(User user) throws FFMException;
     void quitGroup(User user) throws FFMException;
     void removeFromGroup(User user,Long id) throws FFMException;
     GroupInfoForm getGroupInfo(User user) throws FFMException;

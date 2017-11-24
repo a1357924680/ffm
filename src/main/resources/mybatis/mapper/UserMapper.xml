@@ -129,7 +129,7 @@
       #{allIncome,jdbcType=BIGINT}, #{sex,jdbcType=BIGINT}, #{photo,jdbcType=VARCHAR}, 
       #{extNo1,jdbcType=BIGINT}, #{extNo2,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.family.financial.management.dao.entity.User" useGeneratedKeys="true" keyProperty="Id">
+  <insert id="insertSelective" parameterType="com.family.financial.management.dao.entity.User" useGeneratedKeys="true" keyProperty="id">
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

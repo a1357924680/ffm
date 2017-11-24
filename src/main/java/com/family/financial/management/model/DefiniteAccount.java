@@ -20,7 +20,7 @@ public class DefiniteAccount {
 
     private String description;
 
-    private String imgUrl;
+    private String fatherName;
 
     private String topLevelId;
 
@@ -99,11 +99,12 @@ public class DefiniteAccount {
         this.description = description;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getFatherName() {
+        return fatherName;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
     }
+
 }

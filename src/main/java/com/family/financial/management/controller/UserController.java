@@ -6,6 +6,7 @@ import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.UserInfoFrom;
 import com.family.financial.management.service.interfaces.UserService;
 import com.family.financial.management.utils.Const;
+import com.family.financial.management.utils.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -66,8 +68,6 @@ public class UserController extends BaseController{
             if (!user.getPassword().equals(password)){
                 throw new FFMException(WRONG_PASSWORD);
             }
-            super.userInfoFrom = new UserInfoFrom();
-            BeanUtils.copyProperties(user,super.userInfoFrom);
             session.setAttribute(Const.SESSION_USER, user);
 
         } catch (FFMException e) {
@@ -79,7 +79,6 @@ public class UserController extends BaseController{
     @RequestMapping(value = "/loginout",method = RequestMethod.GET)
     public Map<String, String> logout(HttpSession session){
         session.invalidate();
-        super.userInfoFrom.setUserId("0");
         return getSuccessResult();
     }
 
@@ -105,9 +104,19 @@ public class UserController extends BaseController{
     }
 
     @GetMapping("/getMonthBill")
-    public Map<String,String> updateUser( String userId){
+    public Map<String,String> updateUser( String userId,String year){
         try {
-            List accountList = userService.getMonthBill(userId);
+            long yearLong ;
+            if (StringUtils.isEmpty(year)){
+                yearLong = LocalDate.now().getYear();
+            }else {
+                try {
+                    yearLong = Long.parseLong(year);
+                }catch (Exception e){
+                    throw new FFMException(100151,"错误的年份");
+                }
+            }
+            List accountList = userService.getMonthBill(Long.parseLong(userId),yearLong);
             return getSuccessResult("accountList",accountList);
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());

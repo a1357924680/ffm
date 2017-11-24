@@ -21,11 +21,15 @@ public enum  FFMExceptionEnum {
     NOT_GROUP_MANAGER(100115,"非该组管理员"),
     ERROR_RETURN_TYPE(100116,"返回对象转换失败"),
     USER_JOIN_OTHER_GROUP(100117,"用户已经加入了家庭组"),
+    CAN_NOT_REMVE_SELF(100118,"无法移除自己"),
     TOPTYPE_NOT_EXIST(100121,"该分类不存在"),
     ACCOUNT_ID_ERROR(100131,"账单Id异常"),
     NO_SUCH_ACCOUNT(100302,"不存在该账单"),
     ERROR_PARAMETER(100303,"参数异常"),
     DATABASE_ERROR(100888,"数据库异常"),
+    NOT_YOUR_TYPE(100304,"非该用户分类"),
+    NOT_YOUR_ACCOUNT(100305,"非该用户账单"),
+    BASIC_TYPE_ERROR(100305,"基本类型无法修改"),
     SYSTEM_ERROR(999,"系统异常");
     private int code;
     private String msg;

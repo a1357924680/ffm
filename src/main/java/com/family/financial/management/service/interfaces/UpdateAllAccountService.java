@@ -11,4 +11,5 @@ public interface UpdateAllAccountService {
     void updateGroupAccount(Long groupId);
     void insertMonthAccount(Account account);
     void deleteMonthAccount(Account account);
+    void addYearBill(long userId,long year);
 }

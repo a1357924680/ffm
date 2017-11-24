@@ -21,6 +21,7 @@ server:
         test-on-borrow: false
         test-while-idle: true
         test-on-return: false
+        filters: stat,wall,slf4j
 mybatis:
   config-locations: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/*.xml

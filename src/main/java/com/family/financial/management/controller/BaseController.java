@@ -58,7 +58,7 @@ public class BaseController {
 
     protected void updateUserInfo(Long id) {
         User user = userMapper.selectByPrimaryKey(id);
-        BeanUtils.copyProperties(user,userInfoFrom);
+        request.setAttribute(Const.SESSION_USER, user);
 
     }
 

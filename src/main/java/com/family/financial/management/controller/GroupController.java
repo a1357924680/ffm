@@ -6,7 +6,9 @@ import com.family.financial.management.dao.entity.Groups;
 import com.family.financial.management.dao.entity.User;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.GroupInfoForm;
+import com.family.financial.management.model.Request;
 import com.family.financial.management.service.interfaces.GroupService;
+import com.family.financial.management.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,10 +91,13 @@ public class GroupController extends BaseController{
         }
     }
 
-    @GetMapping("findGroup")
-    public Map<String, String> findGroup(@RequestParam(defaultValue = "a") String groupInfo){
+    @GetMapping("/findGroup")
+    public Map<String, String> findGroup(@RequestParam(defaultValue = "") String groupInfo){
 
         try {
+            if (StringUtils.isEmpty(groupInfo)){
+                throw new FFMException(ERROR_PARAMETER);
+            }
             List<Groups> group = groupService.findGroup(groupInfo);
             return getSuccessResult("group",group);
         } catch (FFMException e) {
@@ -100,7 +105,7 @@ public class GroupController extends BaseController{
             return getErrorResult(e.getCode(),e.getMsg());
         }
     }
-    @GetMapping("getGroupInfo")
+    @GetMapping("/getGroupInfo")
     public Map<String, String> getGroupInfo(){
 
         try {
@@ -160,7 +165,7 @@ public class GroupController extends BaseController{
             if (!user.getIsManager()){
                 throw new FFMException(NOT_GROUP_MANAGER);
             }
-            List<GroupRequest> groupRequests = groupService.getGroupRequests(user);
+            List<Request> groupRequests = groupService.getGroupRequests(user);
             return getSuccessResult("groupRequests",groupRequests);
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());
@@ -193,6 +198,9 @@ public class GroupController extends BaseController{
             User user = getUser();
             if (!user.getIsManager()) {
                 throw new FFMException(NOT_GROUP_MANAGER);
+            }
+            if (removeid.equals(user.getId())){
+                throw new FFMException(CAN_NOT_REMVE_SELF);
             }
             groupService.removeFromGroup(user,removeid);
             return getSuccessResult();

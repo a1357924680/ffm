@@ -21,6 +21,8 @@ public interface AccountMapper {
 
     List<Account> selectByExample(AccountExample example);
 
+    List<Account> selectGroupAccounts(@Param("start")String fromDate,@Param("end")String toDate,@Param("userId")Long userId);
+
     List<DefiniteAccount> selectDefiniteAccount(AccountExample example);
 
     Account selectByPrimaryKey(Long id);
@@ -32,4 +34,6 @@ public interface AccountMapper {
     int updateByPrimaryKeySelective(Account record);
 
     int updateByPrimaryKey(Account record);
+
+    Account selectByDate(@Param("start")String fromDate,@Param("end")String toDate,@Param("userId")Long userId);
 }

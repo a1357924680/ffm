@@ -22,6 +22,8 @@ public interface GroupsMapper {
 
     Groups selectByPrimaryKey(Long groupId);
 
+    List<Groups> selectByString(@Param("id") String id,@Param("info") String info);
+
     int updateByExampleSelective(@Param("record") Groups record, @Param("example") GroupsExample example);
 
     int updateByExample(@Param("record") Groups record, @Param("example") GroupsExample example);

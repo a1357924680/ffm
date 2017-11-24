@@ -29,4 +29,8 @@ public interface AccountTypeMapper {
     int updateByPrimaryKeySelective(AccountType record);
 
     int updateByPrimaryKey(AccountType record);
+
+    List<AccountType> selectBasicTypes();
+
+    List<AccountType> selectUsersTypes(@Param("userId") Long userId);
 }

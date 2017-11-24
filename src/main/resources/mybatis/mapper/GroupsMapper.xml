@@ -102,6 +102,12 @@
     from groups
     where group_id = #{groupId,jdbcType=BIGINT}
   </select>
+  <select id="selectByString" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from groups
+    where group_id like  #{id}  or group_name like  #{info}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from groups
     where group_id = #{groupId,jdbcType=BIGINT}

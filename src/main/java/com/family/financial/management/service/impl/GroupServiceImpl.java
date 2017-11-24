@@ -4,6 +4,7 @@ import com.family.financial.management.dao.entity.*;
 import com.family.financial.management.dao.mapper.*;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.GroupInfoForm;
+import com.family.financial.management.model.Request;
 import com.family.financial.management.model.UserInfoFrom;
 import com.family.financial.management.service.interfaces.GroupService;
 import com.family.financial.management.service.interfaces.UpdateAllAccountService;
@@ -84,25 +85,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<Groups> findGroup(String groupInfo) throws FFMException {
         List<Groups> groupsList = new ArrayList<>();
-        GroupsExample example = new GroupsExample();
-        GroupsExample.Criteria criteria = example.createCriteria();
-        criteria.andGroupNameLike(groupInfo);
-
-        boolean isLongType = false;
-        /*验证是否可能为groupId*/
-        try {
-            Long.parseLong(groupInfo);
-            isLongType = true;
-        }catch (Exception e){
-            logger.info("查询条件非long类型");
-        }
-        if (isLongType){
-            Long signId = Long.parseLong(groupInfo);
-            GroupsExample.Criteria criteria2 = example.createCriteria();
-            criteria2.andGroupIdEqualTo(signId);
-            example.or(criteria2);
-        }
-        groupsList = groupsMapper.selectByExample(example);
+        groupsList = groupsMapper.selectByString(groupInfo,"%"+groupInfo+"%");
         return groupsList;
     }
 
@@ -156,14 +139,23 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<GroupRequest> getGroupRequests(User user) throws FFMException {
+    public List<Request> getGroupRequests(User user) throws FFMException {
         GroupRequestExample requestExample = new GroupRequestExample();
         GroupRequestExample.Criteria criteria = requestExample.createCriteria();
         criteria.andToUserEqualTo(user.getId());
         criteria.andStatusEqualTo((long) 0);
         List<GroupRequest> requests = new ArrayList<>();
         requests = groupRequestMapper.selectByExample(requestExample);
-        return requests;
+        List<Request> request = new ArrayList<>();
+        for (GroupRequest r: requests) {
+            Request re = new Request();
+            BeanUtils.copyProperties(r,re);
+            User u = userMapper.selectByPrimaryKey(r.getFromUser());
+            re.setUserName(u.getUserName());
+            re.setUserId(u.getUserId());
+            request.add(re);
+        }
+        return request;
     }
 
     @Override
@@ -172,6 +164,7 @@ public class GroupServiceImpl implements GroupService {
             dropGroup(user);
         }else {
             removeFromGroup(user,user.getId());
+            updateService.updateGroupAccount(user.getGroupId());
         }
     }
 

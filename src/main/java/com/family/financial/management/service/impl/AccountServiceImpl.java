@@ -1,14 +1,20 @@
 package com.family.financial.management.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.family.financial.management.dao.entity.*;
 import com.family.financial.management.dao.mapper.AccountMapper;
+import com.family.financial.management.dao.mapper.AccountMonthMapper;
 import com.family.financial.management.dao.mapper.AccountTypeBaseMapper;
+import com.family.financial.management.emun.AccountTypeEnum;
+import com.family.financial.management.emun.FFMEnum;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.AccountForm;
 import com.family.financial.management.model.ConditionForm;
 import com.family.financial.management.model.DefiniteAccount;
 import com.family.financial.management.service.interfaces.AccountService;
 import com.family.financial.management.service.interfaces.UpdateAllAccountService;
+import com.family.financial.management.service.interfaces.UserService;
 import com.family.financial.management.utils.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +22,14 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 import static com.family.financial.management.emun.FFMExceptionEnum.DATABASE_ERROR;
+import static com.family.financial.management.emun.FFMExceptionEnum.NOT_YOUR_ACCOUNT;
 import static com.family.financial.management.emun.FFMExceptionEnum.NO_SUCH_ACCOUNT;
 
 /**
@@ -29,11 +40,17 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private UpdateAllAccountService updateService;
+    @Autowired
+    private UserService userService;
     @Resource
     private AccountMapper accountMapper;
     @Resource
     private AccountTypeBaseMapper accountTypeBaseMapper;
+    @Resource
+    private AccountMonthMapper accountMonthMapper;
 
+    @Resource
+    private AccountMonthMapper monthMapper;
     @Override
     public void addAccount(long userId , AccountForm accountForm) throws FFMException {
         Account account = new Account();
@@ -54,8 +71,13 @@ public class AccountServiceImpl implements AccountService {
         AccountExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(userId);
         criteria.andIdEqualTo(accountForm.getId());
-        Optional<List<Account>> accountList = Optional.ofNullable(accountMapper.selectByExample(example));
-        Account account = accountList.orElseThrow(()->new FFMException(NO_SUCH_ACCOUNT)).get(0);
+        Account account = accountMapper.selectByPrimaryKey(accountForm.getId());
+        if (account == null){
+            throw new FFMException(NO_SUCH_ACCOUNT);
+        }
+        if (!account.getUserId().equals(userId)){
+            throw new FFMException(NOT_YOUR_ACCOUNT);
+        }
         /* 这里的为了更新月账单情况，写的有些搞笑，先删掉这笔账单，再重新插入*/
         updateService.deleteMonthAccount(account);
         BeanUtils.copyProperties(accountForm,account);
@@ -69,13 +91,18 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deleteAccount(long userId , AccountForm accountForm) throws FFMException{
+    public void deleteAccount(long userId , long id) throws FFMException{
         AccountExample example = new AccountExample();
         AccountExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(userId);
-        criteria.andIdEqualTo(accountForm.getId());
-        Optional<List<Account>> accountList = Optional.ofNullable(accountMapper.selectByExample(example));
-        Account account = accountList.orElseThrow(()->new FFMException(NO_SUCH_ACCOUNT)).get(0);
+        criteria.andIdEqualTo(id);
+        Account account = accountMapper.selectByPrimaryKey(id);
+        if (account == null){
+            throw new FFMException(NO_SUCH_ACCOUNT);
+        }
+        if (!account.getUserId().equals(userId)){
+            throw new FFMException(NOT_YOUR_ACCOUNT);
+        }
         try {
             accountMapper.deleteByPrimaryKey(account.getId());
             updateService.deleteMonthAccount(account);
@@ -109,12 +136,10 @@ public class AccountServiceImpl implements AccountService {
         }
         Optional<List<DefiniteAccount>> accountList = Optional.ofNullable(accountMapper.selectDefiniteAccount(example));
         List<DefiniteAccount> acounts = accountList.orElse(new ArrayList<DefiniteAccount>());
-        List<AccountTypeBase> type = accountTypeBaseMapper.selectByExample(new AccountTypeBaseExample());
-        acounts.stream().forEach((u)->{
-            Optional<String> imgs = type.stream().filter((v)->v.getTopLevelId()==Long.parseLong(u.getTopLevelId())).findFirst().map(AccountTypeBase::getImgs);
-            //路径还没写
-            u.setImgUrl(imgs.orElse(""));
-        });
+        for (int i = 0; i < acounts.size(); i++) {
+            acounts.get(i).setFatherName(
+                    AccountTypeEnum.getType(StringUtils.praseLong(acounts.get(i).getTopLevelId())));
+        }
         return acounts;
     }
 
@@ -124,8 +149,10 @@ public class AccountServiceImpl implements AccountService {
         AccountExample.Criteria criteria = example.createCriteria();
         example.setOrderByClause("gmt_create desc");
         if (!(StringUtils.isEmpty(conditionForm.getLimit())||StringUtils.isEmpty(conditionForm.getOffset()))){
-            example.setOffset(StringUtils.praseInteger(conditionForm.getOffset()));
-            example.setLimit(StringUtils.praseInteger(conditionForm.getLimit()));
+            int offset = StringUtils.praseInteger(conditionForm.getOffset());
+            int limit = StringUtils.praseInteger(conditionForm.getLimit());
+            example.setOffset(offset*limit);
+            example.setLimit(limit);
         }
         if (!(StringUtils.isEmpty(conditionForm.getMaxAccount()))){
             criteria.andAccountNumLessThanOrEqualTo(StringUtils.praseLong(conditionForm.getMaxAccount()));
@@ -150,12 +177,65 @@ public class AccountServiceImpl implements AccountService {
 
         Optional<List<DefiniteAccount>> accountList = Optional.ofNullable(accountMapper.selectDefiniteAccount(example));
         List<DefiniteAccount> acounts = accountList.orElse(new ArrayList<DefiniteAccount>());
-        List<AccountTypeBase> type = accountTypeBaseMapper.selectByExample(new AccountTypeBaseExample());
-        acounts.stream().forEach((u)->{
-            Optional<String> imgs = type.stream().filter((v)->v.getTopLevelId()==Long.parseLong(u.getTopLevelId())).findFirst().map(AccountTypeBase::getImgs);
-            //路径还没写
-            u.setImgUrl(imgs.orElse("E:\\ffm\\users\\unknow.png"));
-        });
+        for (int i = 0; i < acounts.size(); i++) {
+            acounts.get(i).setFatherName(
+                    AccountTypeEnum.getType(StringUtils.praseLong(acounts.get(i).getTopLevelId())));
+        }
         return acounts;
+    }
+    @Override
+    public int getCountByConditions(long userId , ConditionForm conditionForm) throws FFMException{
+        List<DefiniteAccount> accounts = getByConditions(userId,conditionForm);
+        return accounts.size();
+    }
+
+    @Override
+    public JSONObject getIndexAccount(long userId) throws FFMException{
+        JSONObject jsonObject = new JSONObject();
+        LocalDate time = LocalDate.now();
+        //年月周日信息
+        jsonObject.put("today", getSpendingAndIncomeByTime(time.atStartOfDay().toString(),time.plusDays(1).toString(),userId));
+        jsonObject.put("thisWeek", getSpendingAndIncomeByTime(time.with(DayOfWeek.MONDAY).toString(),time.with(DayOfWeek.SUNDAY).toString(),userId));
+        jsonObject.put("thisMonth", getSpendingAndIncomeByTime(time.with(TemporalAdjusters.firstDayOfMonth()).toString(),time.with(TemporalAdjusters.lastDayOfMonth()).toString(),userId));
+        jsonObject.put("thisYear", getSpendingAndIncomeByTime(time.with(TemporalAdjusters.firstDayOfYear()).toString(),time.with(TemporalAdjusters.lastDayOfYear()).toString(),userId));
+
+
+        jsonObject.put("everyMonthBill",userService.getMonthBill(userId,time.getYear()));
+
+        AccountExample accountExample = new AccountExample();
+        accountExample.createCriteria();
+        accountExample.getOredCriteria().get(0).andGmtCreateGreaterThanOrEqualTo(
+                Date.from(time.with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        accountExample.getOredCriteria().get(0).andGmtCreateLessThan(
+                Date.from(time.plusMonths(1L).with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+        JSONArray monthAccountJson = new JSONArray();
+        Optional<List<Account>> monthAccounts = Optional.ofNullable(accountMapper.selectGroupAccounts(time.with(TemporalAdjusters.firstDayOfMonth()).toString(),time.with(TemporalAdjusters.lastDayOfMonth()).toString(),userId));
+        for (Account a: monthAccounts.orElse(new ArrayList<>())) {
+            JSONObject groupAccounts = new JSONObject(3);
+            groupAccounts.put("typeId", a.getType());
+            groupAccounts.put("type", AccountTypeEnum.getType(a.getType()));
+            if (a.getIncome() > 0){
+                groupAccounts.put("income",a.getIncome());
+            }else {
+                groupAccounts.put("spending",a.getSpending());
+            }
+            monthAccountJson.add(groupAccounts);
+        }
+        jsonObject.put("thisMonthAccounts",monthAccountJson);
+
+        return jsonObject;
+    }
+
+
+    public JSONObject getSpendingAndIncomeByTime(String fromDate, String toDate, Long userId){
+        Optional<Account> account = Optional.ofNullable(accountMapper.selectByDate(fromDate,toDate,userId));
+        JSONObject json = new JSONObject();
+        return new JSONObject(new HashMap<String,Object>(){
+            {
+                put("income",account.map(Account::getIncome).orElse(0L));
+                put("spending",account.map(Account::getSpending).orElse(0L));
+            }
+        });
     }
 }

@@ -216,4 +216,18 @@
       is_basic = #{isBasic,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectBasicTypes"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from account_type
+    where is_basic = 1
+  </select>
+  <select id="selectUsersTypes" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from account_type
+    where is_basic = 0 and user_id = #{userId}
+  </select>
+
 </mapper>

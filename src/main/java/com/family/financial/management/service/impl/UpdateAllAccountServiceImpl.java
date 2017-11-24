@@ -42,6 +42,10 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
         }
     }
 
+    /**
+     * 用户资金变化后，更新用户
+     * @param userId
+     */
     @Override
     public void updateUserAccount(Long userId) {
         AccountExample example = new AccountExample();
@@ -50,7 +54,7 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
         List<Account> accounts = accountMapper.selectByExample(example);
         long allIncome = accounts.stream().map(Account::getIncome).reduce((long) 0,Long::sum);
         long allSpending = accounts.stream().map(Account::getSpending).reduce((long) 0,Long::sum);
-        long balance = accounts.stream().map(Account::getAccountNum).reduce((long) 0,Long::sum);
+        long balance = allIncome-allSpending;
 
         User user = userMapper.selectByPrimaryKey(userId);
         user.setAllIncome(allIncome);
@@ -61,6 +65,10 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
 
     }
 
+    /**
+     * 家庭组信息变化后，更新家庭组
+     * @param groupId
+     */
     @Override
     public void updateGroupAccount(Long groupId) {
         Groups group = groupsMapper.selectByPrimaryKey(groupId);
@@ -80,6 +88,10 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
         groupsMapper.updateByPrimaryKeySelective(group);
     }
 
+    /**
+     * 更新本月信息
+     * @param account
+     */
     @Override
     public void insertMonthAccount(Account account) {
         Long month =  getMonth(account.getGmtCreate());
@@ -89,13 +101,7 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
         criteria.andMonthEqualTo(month);
         List<AccountMonth> accountMonthList = accountMonthMapper.selectByExample(example);
         if ((null == accountMonthList) || (0 == accountMonthList.size())){
-            AccountMonth newAccountMonth = new AccountMonth();
-            newAccountMonth.setBalance(account.getIncome()-account.getSpending());
-            newAccountMonth.setIncome(account.getIncome());
-            newAccountMonth.setSpend(account.getSpending());
-            newAccountMonth.setUserId(account.getUserId());
-            newAccountMonth.setMonth(month);
-            accountMonthMapper.insert(newAccountMonth);
+            addYearBill(account.getUserId(),Long.parseLong(new SimpleDateFormat("YYYY").format(account.getGmtCreate()).toString()));
         }else {
             AccountMonth accountMonth = accountMonthList.get(0);
             accountMonth.setSpend(accountMonth.getSpend() + account.getSpending());
@@ -105,6 +111,10 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
         }
     }
 
+    /**
+     * 删除账单后，更新本月信息
+     * @param account
+     */
     @Override
     public void deleteMonthAccount(Account account) {
         Long month =  getMonth(account.getGmtCreate());
@@ -124,6 +134,25 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
         String dateString = formatter.format(date);
         return Long.parseLong(dateString);
+    }
+
+    /**
+     * 插入每月信息
+     * @param userId
+     * @param year
+     */
+    @Override
+    public void addYearBill(long userId,long year){
+        long date = year * 100;
+        for (int i = 1; i < 13; i++) {
+            AccountMonth accountMonth = new AccountMonth();
+            accountMonth.setUserId(userId);
+            accountMonth.setSpend(0L);
+            accountMonth.setBalance(0L);
+            accountMonth.setIncome(0L);
+            accountMonth.setMonth(date+i);
+            accountMonthMapper.insertSelective(accountMonth);
+        }
     }
 
 

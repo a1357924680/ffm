@@ -1,23 +1,27 @@
 package com.family.financial.management.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.family.financial.management.dao.entity.User;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.AccountForm;
 import com.family.financial.management.model.ConditionForm;
 import com.family.financial.management.model.DefiniteAccount;
 import com.family.financial.management.service.interfaces.AccountService;
+import com.family.financial.management.utils.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +42,10 @@ public class AccountController extends BaseController {
     private AccountService accountService;
 
     @PostMapping("/addAccount")
-    public Map<String,String> addAccount(AccountForm accountForm){
+    public Map<String,String> addAccount(String type,String gmtCreate,String description,String income,String spending){
         try {
+
+            AccountForm accountForm = checkAccountForm(type, gmtCreate, description, income, spending);
             User user = getUser();
             accountService.addAccount(user.getId(),accountForm);
         } catch (FFMException e) {
@@ -48,13 +54,42 @@ public class AccountController extends BaseController {
         }
         return getSuccessResult();
     }
-    @PostMapping("/updateAccount")
-    public Map<String, String> updateAccount(AccountForm accountForm){
+
+    private AccountForm checkAccountForm(String type, String gmtCreate, String description, String income, String spending) throws FFMException {
+        AccountForm accountForm = new AccountForm();
         try {
+            accountForm.setType(Long.parseLong(type));
+        }catch (Exception e){
+            throw new FFMException(100901,"type参数异常");
+        }
+        try {
+         accountForm.setGmtCreate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(gmtCreate));
+        }catch (Exception e){
+            throw new FFMException(100901,"type参数异常");
+        }
+        if (!StringUtils.isEmpty(income)){
+            accountForm.setIncome(Long.parseLong(income));
+        }else {
+            accountForm.setIncome(0L);
+        }
+        if (!StringUtils.isEmpty(spending)){
+            accountForm.setSpending(Long.parseLong(spending));
+        }else {
+            accountForm.setSpending(0L);
+        }
+        accountForm.setAccountNum(accountForm.getIncome()-accountForm.getSpending());
+        if (!StringUtils.isEmpty(description)){
+            accountForm.setDescription(description);
+        }
+        return accountForm;
+    }
+
+    @PostMapping("/updateAccount")
+    public Map<String, String> updateAccount(String id,String type, String gmtCreate, String description, String income, String spending){
+        try {
+            AccountForm accountForm = checkAccountForm(type, gmtCreate, description, income, spending);
+            accountForm.setId(StringUtils.praseLong(id));
             User user = getUser();
-            if (StringUtils.isEmpty(accountForm.getId())){
-                throw new FFMException(ACCOUNT_ID_ERROR);
-            }
             accountService.updateAccount(user.getId(),accountForm);
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());
@@ -64,13 +99,15 @@ public class AccountController extends BaseController {
     }
 
     @PostMapping("/deleteAccount")
-    public Map<String, String> deleteAccount(AccountForm accountForm){
+    public Map<String, String> deleteAccount(String id){
         try {
+
             User user = getUser();
-            if (StringUtils.isEmpty(accountForm.getId())){
+            if (StringUtils.isEmpty(id)){
                 throw new FFMException(ACCOUNT_ID_ERROR);
             }
-            accountService.deleteAccount(user.getId(),accountForm);
+
+            accountService.deleteAccount(user.getId(), com.family.financial.management.utils.StringUtils.praseLong(id));
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());
             return getErrorResult(e.getCode(),e.getMsg());
@@ -78,7 +115,7 @@ public class AccountController extends BaseController {
         return getSuccessResult();
     }
 
-    @GetMapping(" ")
+    @GetMapping("/getAccountList")
     public Map<String, String> getAccountList(String limit,String offset,String fromDate,String toDate){
         try {
             User user = getUser();
@@ -114,5 +151,33 @@ public class AccountController extends BaseController {
             return getErrorResult(e.getCode(),e.getMsg());
         }
     }
+
+    @GetMapping("getCount")
+    public Map<String, String> getByConditionsCount(ConditionForm conditionForm){
+        try {
+            User user = getUser();
+
+            int count = accountService.getCountByConditions(user.getId(),conditionForm);
+            return getSuccessResult("count",count);
+        } catch (FFMException e) {
+            logger.error(e.getCode()+":"+e.getMsg());
+            return getErrorResult(e.getCode(),e.getMsg());
+        }
+    }
+
+
+    @GetMapping("getIndexAccount")
+    public Map<String, String> getIndexAccount(){
+        try {
+            User user = getUser();
+            JSONObject json = accountService.getIndexAccount(user.getId());
+            return getSuccessResult("accounts",json);
+        } catch (FFMException e) {
+            logger.error(e.getCode()+":"+e.getMsg());
+            return getErrorResult(e.getCode(),e.getMsg());
+        }
+    }
+
+
 }
 

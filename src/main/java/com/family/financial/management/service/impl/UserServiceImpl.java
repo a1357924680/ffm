@@ -10,10 +10,12 @@ import com.family.financial.management.dao.mapper.AccountMonthMapper;
 import com.family.financial.management.dao.mapper.UserMapper;
 import com.family.financial.management.model.UserForm;
 import com.family.financial.management.exception.FFMException;
+import com.family.financial.management.service.interfaces.UpdateAllAccountService;
 import com.family.financial.management.service.interfaces.UserService;
 
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +23,7 @@ import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import java.io.*;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +43,9 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Resource
     private AccountMonthMapper accountMonthMapper;
+
+    @Autowired
+    private UpdateAllAccountService updateAllAccountService;
 
     @Override
     public User getUser(String userId) throws FFMException {
@@ -83,6 +89,8 @@ public class UserServiceImpl implements UserService {
         }catch (Exception e){
             throw new FFMException(SYSTEM_ERROR);
         }
+        //注册用户，添加本年度的月度信息
+        updateAllAccountService.addYearBill(user.getId(),LocalDate.now().getYear());
 
     }
 
@@ -113,23 +121,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List getMonthBill(String userId) throws FFMException {
-        Long userid ;
-        Long groupid ;
-        try {
-            userid = Long.parseLong(userId);
-        }catch (Exception e){
-            throw new FFMException(ERROR_PARAMETER);
-        }
-        User user = userMapper.selectByPrimaryKey(userid);
+    public List getMonthBill(long userId,long year) throws FFMException {
+
+        User user = userMapper.selectByPrimaryKey(userId);
         if (null == user){
             throw new FFMException(NO_SUCH_USER);
         }
 
         AccountMonthExample example = new AccountMonthExample();
         AccountMonthExample.Criteria criteria = example.createCriteria();
-        criteria.andUserIdEqualTo(userid);
+        criteria.andMonthLessThanOrEqualTo(year*100+12);
+        criteria.andMonthGreaterThanOrEqualTo(year*100+1);
+        criteria.andUserIdEqualTo(userId);
         List<AccountMonth> accountMonthList = accountMonthMapper.selectByExample(example);
+        //如果数据库中没有
+        if (accountMonthList.size() == 0){
+            for (int i = 1; i < 13; i++) {
+                AccountMonth accountMonth = new AccountMonth();
+                accountMonth.setUserId(userId);
+                accountMonth.setSpend(0L);
+                accountMonth.setBalance(0L);
+                accountMonth.setIncome(0L);
+                accountMonth.setMonth(year*100+i);
+                accountMonthList.add(accountMonth);
+            }
+        }
         return accountMonthList;
     }
 

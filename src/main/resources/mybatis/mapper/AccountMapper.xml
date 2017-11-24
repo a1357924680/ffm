@@ -113,11 +113,21 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from account
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="selectGroupAccounts"  resultMap="BaseResultMap">
+    select
+    top_leve AS TYPE, sum(income) as income, sum(spending) as spending, account_num, gmt_create, description, ext_no1,
+    ext_no2
+    from account JOIN account_type ON TYPE = account_type.id
+    where gmt_create >= #{start} and gmt_create  &lt; #{end} and account.user_id = #{userId}
+    group by top_leve
+  </select>
+
   <select id="selectDefiniteAccount" parameterType="com.family.financial.management.dao.entity.AccountExample" resultMap="BaseResultMap2">
     select
     <if test="distinct">
@@ -333,4 +343,10 @@
       ext_no2 = #{extNo2,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectByDate"  resultMap="BaseResultMap">
+    select
+    sum(spending) as spending,sum(income) as income
+    from account
+    where gmt_create >= #{start} and gmt_create  &lt; #{end} and user_id = #{userId}
+  </select>
 </mapper>
