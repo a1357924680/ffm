@@ -41,12 +41,11 @@ public class UserController extends BaseController{
     private UserService userService;
 //    @RequestBody @Valid UserForm userForm,@RequestParam MultipartFile filePhoto
     @PostMapping("/register")
-    Map<String, String> register(@RequestParam MultipartFile filePhoto,String userId,
+    Map<String, String> register(String userId,
                                  String userName,String password,String mobile,String sex){
         try {
             UserForm userForm = new UserForm();
             userForm.setMobile(mobile);
-            userForm.setFilePhoto(filePhoto);
             userForm.setPassword(password);
             userForm.setSex(sex);
             userForm.setUserId(userId);
