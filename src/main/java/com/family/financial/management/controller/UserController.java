@@ -4,6 +4,7 @@ import com.family.financial.management.dao.entity.User;
 import com.family.financial.management.model.UserForm;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.UserInfoFrom;
+import com.family.financial.management.service.interfaces.UpdateAllAccountService;
 import com.family.financial.management.service.interfaces.UserService;
 import com.family.financial.management.utils.Const;
 import com.family.financial.management.utils.StringUtils;
@@ -39,7 +40,10 @@ public class UserController extends BaseController{
 
     @Autowired
     private UserService userService;
-//    @RequestBody @Valid UserForm userForm,@RequestParam MultipartFile filePhoto
+
+    @Autowired
+    private UpdateAllAccountService updateService;
+    //    @RequestBody @Valid UserForm userForm,@RequestParam MultipartFile filePhoto
     @PostMapping("/register")
     Map<String, String> register(String userId,
                                  String userName,String password,String mobile,String sex){
@@ -68,7 +72,7 @@ public class UserController extends BaseController{
                 throw new FFMException(WRONG_PASSWORD);
             }
             session.setAttribute(Const.SESSION_USER, user);
-
+            updateService.checkConfig(user.getId());
         } catch (FFMException e) {
             return getErrorResult(e.getCode(),e.getMsg());
         }

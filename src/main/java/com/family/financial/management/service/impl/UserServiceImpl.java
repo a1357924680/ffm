@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static com.family.financial.management.constant.FFMConstant.photo;
 import static com.family.financial.management.emun.FFMEnum.PHOTO_PATH;
 import static com.family.financial.management.emun.FFMExceptionEnum.*;
 import static com.family.financial.management.utils.Const.MAX_REGISTER_NUM;
@@ -76,14 +77,14 @@ public class UserServiceImpl implements UserService {
         }
         checkMobileNum(user.getMobile());
 
-        String originalFilename=userForm.getFilePhoto().getOriginalFilename();
-        String types=originalFilename.substring(originalFilename.lastIndexOf(".")+1).toLowerCase();
-        String newFileName=PHOTO_PATH.getMsg() + user.getUserId() + "." +types;
-        savePhoto(newFileName,userForm.getFilePhoto());
-        BASE64Encoder base64 = new BASE64Encoder();
-        String code = base64.encode(file2Byte(newFileName));
-        code = "data:image/"+types+";base64,"+code;
-        user.setPhoto(code);
+//        String originalFilename=userForm.getFilePhoto().getOriginalFilename();
+//        String types=originalFilename.substring(originalFilename.lastIndexOf(".")+1).toLowerCase();
+//        String newFileName=PHOTO_PATH.getMsg() + user.getUserId() + "." +types;
+//        savePhoto(newFileName,userForm.getFilePhoto());
+//        BASE64Encoder base64 = new BASE64Encoder();
+//        String code = base64.encode(file2Byte(newFileName));
+//        code = "data:image/"+types+";base64,"+code;
+        user.setPhoto(photo);
         try {
             userMapper.insertSelective(user);
         }catch (Exception e){

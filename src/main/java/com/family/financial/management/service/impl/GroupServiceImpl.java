@@ -202,6 +202,7 @@ public class GroupServiceImpl implements GroupService {
         List<UserInfoFrom> usersForm= new ArrayList<>();
         memberSId.forEach(userid->{
             UserInfoFrom userInfoFrom = new UserInfoFrom();
+            updateService.checkConfig(user.getId());
             User tempUser = userMapper.selectByPrimaryKey(Long.parseLong(userid));
             BeanUtils.copyProperties(tempUser,userInfoFrom);
             usersForm.add(userInfoFrom);
