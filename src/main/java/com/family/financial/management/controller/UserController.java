@@ -97,7 +97,7 @@ public class UserController extends BaseController{
             userForm.setSex(sex);
             userForm.setUserName(userName);
             checkUserFormUpdate(userForm);
-            userService.updateUser(userForm);
+            userService.updateUser(userForm,getUser().getId());
             updateUserInfo(Long.parseLong(userForm.getUserId()));
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());

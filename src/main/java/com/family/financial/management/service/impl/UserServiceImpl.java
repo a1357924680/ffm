@@ -14,12 +14,12 @@ import com.family.financial.management.service.interfaces.UpdateAllAccountServic
 import com.family.financial.management.service.interfaces.UserService;
 
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -96,9 +96,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(UserForm userForm) throws FFMException {
+    public void updateUser(UserForm userForm,Long userId) throws FFMException {
 
-        User user = selectUserByUserId(userForm.getUserId());
+        User user = userMapper.selectByPrimaryKey(userId);
         if (user == null) {
             throw new FFMException(NO_SUCH_USER);
         }
@@ -110,8 +110,9 @@ public class UserServiceImpl implements UserService {
         String types=originalFilename.substring(originalFilename.lastIndexOf(".")+1).toLowerCase();
         String newFileName=PHOTO_PATH.getMsg() + user.getUserId() + "." +types;
         savePhoto(newFileName,userForm.getFilePhoto());
-        BASE64Encoder base64 = new BASE64Encoder();
-        String code = base64.encode(file2Byte(newFileName));
+        Base64.encodeBase64(file2Byte(newFileName));
+//        BASE64 base64 = new BASE64Encoder();
+        String code = Base64.encodeBase64String(file2Byte(newFileName));
         code = "data:image/"+types+";base64,"+code;
         user.setPhoto(code);
         try {

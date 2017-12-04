@@ -14,6 +14,6 @@ import java.util.Map;
 public interface UserService {
     public User getUser(String userId) throws FFMException;
     public void registerUser(UserForm userForm ) throws FFMException;
-    public void updateUser(UserForm userForm) throws FFMException;
+    public void updateUser(UserForm userForm,Long userId) throws FFMException;
     public List getMonthBill(long userId,long year) throws FFMException;
 }
