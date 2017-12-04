@@ -1,5 +1,6 @@
 package com.family.financial.management.config;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -53,8 +54,11 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter {
                 return true;
             }
             // 跳转登录
-            String url = "/view/login";
-            response.sendRedirect(url);
+            JSONObject json = new JSONObject();
+            json.put("code","520");
+            json.put("msg","未登录");
+            response.setCharacterEncoding("utf-8");
+            response.getWriter().write(json.toString());
             return false;
         }
     }
