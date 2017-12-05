@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter {
             // 跳转登录
             JSONObject json = new JSONObject();
             json.put("code","520");
-            json.put("msg","未登录");
+            json.put("msg","no permission operation deny");
             response.setCharacterEncoding("utf-8");
             response.getWriter().write(json.toString());
             return false;

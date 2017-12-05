@@ -128,9 +128,9 @@ public class UserController extends BaseController{
 
     }
     private void checkUserForm(UserForm userForm) throws FFMException{
-        if(userForm.getFilePhoto()==null){
-            throw new FFMException(100101,"头像不能为空");
-        }
+//        if(userForm.getFilePhoto()==null){
+//            throw new FFMException(100101,"头像不能为空");
+//        }
         if(userForm.getPassword()==null){
             throw new FFMException(100101,"密码不能为空");
         }
