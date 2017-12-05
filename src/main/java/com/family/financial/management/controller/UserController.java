@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,10 +57,11 @@ public class UserController extends BaseController{
             userForm.setUserName(userName);
             checkUserForm(userForm);
             userService.registerUser(userForm);
+            User user = userService.getUser(userId);
+            return getSuccessResult("user",user);
         } catch (FFMException e) {
             return getErrorResult(e.getCode(),e.getMsg());
         }
-        return getSuccessResult();
     }
 
 
@@ -73,10 +75,20 @@ public class UserController extends BaseController{
             }
             session.setAttribute(Const.SESSION_USER, user);
             updateService.checkConfig(user.getId());
+            return getSuccessResult("user",user);
         } catch (FFMException e) {
             return getErrorResult(e.getCode(),e.getMsg());
         }
-        return getSuccessResult();
+    }
+
+    @PostMapping("/getUser")
+    public Map<String, String> findUser(){
+        try {
+            User user = getUser();
+            return getSuccessResult("user",user);
+        } catch (FFMException e) {
+            return getErrorResult(e.getCode(),e.getMsg());
+        }
     }
 
     @RequestMapping(value = "/loginout",method = RequestMethod.GET)
