@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,6 +32,7 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleExample example = new ArticleExample();
         example.setLimit(20);
         example.setOffset(pageNum-1);
+        example.setOrderByClause("gmt_create desc");
         List<Article> articles = articleMapper.selectByExample(example);
         List<ArticleForm> articleForm = new ArrayList<ArticleForm>();
         articles.forEach(a->{
@@ -51,11 +53,13 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public void addArticle(Article article) throws FFMException {
+        article.setGmtCreate(new Date());
         articleMapper.insertSelective(article);
     }
 
     @Override
     public void updateArticle(Article article) throws FFMException {
+        article.setGmtCreate(new Date());
         articleMapper.updateByPrimaryKeySelective(article);
     }
 

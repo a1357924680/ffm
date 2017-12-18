@@ -12,6 +12,11 @@ public class Message implements Serializable {
 
     private String user;
 
+    /**
+     * 0-未处理，1-已处理
+     */
+    private Long status;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -38,6 +43,14 @@ public class Message implements Serializable {
         this.user = user;
     }
 
+    public Long getStatus() {
+        return status;
+    }
+
+    public void setStatus(Long status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -52,7 +65,8 @@ public class Message implements Serializable {
         Message other = (Message) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getMessage() == null ? other.getMessage() == null : this.getMessage().equals(other.getMessage()))
-            && (this.getUser() == null ? other.getUser() == null : this.getUser().equals(other.getUser()));
+            && (this.getUser() == null ? other.getUser() == null : this.getUser().equals(other.getUser()))
+            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()));
     }
 
     @Override
@@ -62,6 +76,7 @@ public class Message implements Serializable {
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getMessage() == null) ? 0 : getMessage().hashCode());
         result = prime * result + ((getUser() == null) ? 0 : getUser().hashCode());
+        result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         return result;
     }
 
@@ -74,6 +89,7 @@ public class Message implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", message=").append(message);
         sb.append(", user=").append(user);
+        sb.append(", status=").append(status);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

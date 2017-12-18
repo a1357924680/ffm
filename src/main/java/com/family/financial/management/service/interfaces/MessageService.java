@@ -13,4 +13,5 @@ public interface MessageService {
     List<Message> getMessages(int pageNum)throws FFMException;
     void addMessage(Message message)throws FFMException;
     void deleteMessage(int id)throws FFMException;
+    void answerMessage(String message)throws FFMException;
 }

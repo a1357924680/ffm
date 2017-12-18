@@ -1,6 +1,7 @@
 package com.family.financial.management.dao.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author 
@@ -11,6 +12,8 @@ public class Article implements Serializable {
     private String title;
 
     private String content;
+
+    private Date gmtCreate;
 
     private static final long serialVersionUID = 1L;
 
@@ -38,6 +41,14 @@ public class Article implements Serializable {
         this.content = content;
     }
 
+    public Date getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -52,7 +63,8 @@ public class Article implements Serializable {
         Article other = (Article) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getTitle() == null ? other.getTitle() == null : this.getTitle().equals(other.getTitle()))
-            && (this.getContent() == null ? other.getContent() == null : this.getContent().equals(other.getContent()));
+            && (this.getContent() == null ? other.getContent() == null : this.getContent().equals(other.getContent()))
+            && (this.getGmtCreate() == null ? other.getGmtCreate() == null : this.getGmtCreate().equals(other.getGmtCreate()));
     }
 
     @Override
@@ -62,6 +74,7 @@ public class Article implements Serializable {
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getTitle() == null) ? 0 : getTitle().hashCode());
         result = prime * result + ((getContent() == null) ? 0 : getContent().hashCode());
+        result = prime * result + ((getGmtCreate() == null) ? 0 : getGmtCreate().hashCode());
         return result;
     }
 
@@ -74,6 +87,7 @@ public class Article implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", title=").append(title);
         sb.append(", content=").append(content);
+        sb.append(", gmtCreate=").append(gmtCreate);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

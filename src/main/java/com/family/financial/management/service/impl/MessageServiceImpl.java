@@ -1,7 +1,9 @@
 package com.family.financial.management.service.impl;
 
+import com.family.financial.management.dao.entity.GroupRequest;
 import com.family.financial.management.dao.entity.Message;
 import com.family.financial.management.dao.entity.MessageExample;
+import com.family.financial.management.dao.mapper.GroupRequestMapper;
 import com.family.financial.management.dao.mapper.MessageMapper;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.service.interfaces.MessageService;
@@ -18,6 +20,8 @@ public class MessageServiceImpl implements MessageService{
 
     @Resource
     private MessageMapper messageMapper;
+    @Resource
+    private GroupRequestMapper requestMapper;
     @Override
     public int getMessagePage() throws FFMException {
         long count = messageMapper.countByExample(new MessageExample());
@@ -49,5 +53,9 @@ public class MessageServiceImpl implements MessageService{
             throw new FFMException(253123,"无此信息");
         }
         messageMapper.deleteByPrimaryKey(message.getId());
+    }
+
+    @Override
+    public void answerMessage(String message) throws FFMException {
     }
 }

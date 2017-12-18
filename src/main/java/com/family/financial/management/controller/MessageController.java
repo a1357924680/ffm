@@ -90,4 +90,24 @@ public class MessageController extends BaseController {
             return getErrorResult(e.getCode(),e.getMsg());
         }
     }
+
+    /**
+     * 还没做，以后再说
+     * @param message
+     * @return
+     */
+    @PostMapping("/answerMessage")
+    public Map<String, String> answerMessage(String message){
+        try {
+
+            if (!StringUtils.isEmpty(message)){
+                messageService.answerMessage(message);
+            }else {
+                throw new FFMException(1234554,"内容不能为空");
+            }
+            return getSuccessResult();
+        } catch (FFMException e) {
+            return getErrorResult(e.getCode(),e.getMsg());
+        }
+    }
 }
