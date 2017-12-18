@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="message" jdbcType="VARCHAR" property="message" />
     <result column="user" jdbcType="VARCHAR" property="user" />
+    <result column="status" jdbcType="BIGINT" property="status" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -65,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, message, user
+    id, message, user, status
   </sql>
   <select id="selectByExample" parameterType="com.family.financial.management.dao.entity.MessageExample" resultMap="BaseResultMap">
     select
@@ -106,10 +107,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.family.financial.management.dao.entity.Message">
-    insert into message (id, message, user
-      )
-    values (#{id,jdbcType=BIGINT}, #{message,jdbcType=VARCHAR}, #{user,jdbcType=VARCHAR}
-      )
+    insert into message (id, message, user, 
+      status)
+    values (#{id,jdbcType=BIGINT}, #{message,jdbcType=VARCHAR}, #{user,jdbcType=VARCHAR}, 
+      #{status,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.family.financial.management.dao.entity.Message">
     insert into message
@@ -123,6 +124,9 @@
       <if test="user != null">
         user,
       </if>
+      <if test="status != null">
+        status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -133,6 +137,9 @@
       </if>
       <if test="user != null">
         #{user,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -154,6 +161,9 @@
       <if test="record.user != null">
         user = #{record.user,jdbcType=VARCHAR},
       </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -163,7 +173,8 @@
     update message
     set id = #{record.id,jdbcType=BIGINT},
       message = #{record.message,jdbcType=VARCHAR},
-      user = #{record.user,jdbcType=VARCHAR}
+      user = #{record.user,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -177,13 +188,17 @@
       <if test="user != null">
         user = #{user,jdbcType=VARCHAR},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.family.financial.management.dao.entity.Message">
     update message
     set message = #{message,jdbcType=VARCHAR},
-      user = #{user,jdbcType=VARCHAR}
+      user = #{user,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

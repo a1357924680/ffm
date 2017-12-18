@@ -95,6 +95,12 @@ public class GroupServiceImpl implements GroupService {
         if (group == null) {
             throw new FFMException(USER_HAVE_NO_GROUP);
         }
+        GroupRequestExample example = new GroupRequestExample();
+        example.createCriteria().andFromUserEqualTo(user.getId())
+                .andGroupIdEqualTo(groupId).andStatusEqualTo((long) 0);
+        if (groupRequestMapper.selectByExample(example)!=null){
+            throw new FFMException(423121,"您已经申请加入该组了");
+        }
         GroupRequest groupRequest = new GroupRequest();
         groupRequest.setFromUser(user.getId());
         groupRequest.setToUser(group.getGroupManager());
