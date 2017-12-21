@@ -1,5 +1,7 @@
 package com.family.financial.management.model;
 
+import java.util.Date;
+
 /**
  * Created by zhangyiping on 2017/12/14.
  */
@@ -8,9 +10,20 @@ public class ArticleForm {
 
     private String title;
 
-    public ArticleForm(Long id, String title) {
+    private Date gmtCreate;
+
+    public ArticleForm(Long id, String title,Date date) {
         this.id = id;
         this.title = title;
+        this.gmtCreate = date;
+    }
+
+    public Date getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
     }
 
     public Long getId() {

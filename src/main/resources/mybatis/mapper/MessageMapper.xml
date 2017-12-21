@@ -6,6 +6,8 @@
     <result column="message" jdbcType="VARCHAR" property="message" />
     <result column="user" jdbcType="VARCHAR" property="user" />
     <result column="status" jdbcType="BIGINT" property="status" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="is_answer" jdbcType="BIT" property="isAnswer" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, message, user, status
+    id, message, user, status, user_id, is_answer
   </sql>
   <select id="selectByExample" parameterType="com.family.financial.management.dao.entity.MessageExample" resultMap="BaseResultMap">
     select
@@ -108,9 +110,9 @@
   </delete>
   <insert id="insert" parameterType="com.family.financial.management.dao.entity.Message">
     insert into message (id, message, user, 
-      status)
+      status, user_id, is_answer)
     values (#{id,jdbcType=BIGINT}, #{message,jdbcType=VARCHAR}, #{user,jdbcType=VARCHAR}, 
-      #{status,jdbcType=BIGINT})
+      #{status,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{isAnswer,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.family.financial.management.dao.entity.Message">
     insert into message
@@ -127,6 +129,12 @@
       <if test="status != null">
         status,
       </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="isAnswer != null">
+        is_answer,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -140,6 +148,12 @@
       </if>
       <if test="status != null">
         #{status,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="isAnswer != null">
+        #{isAnswer,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -164,6 +178,12 @@
       <if test="record.status != null">
         status = #{record.status,jdbcType=BIGINT},
       </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.isAnswer != null">
+        is_answer = #{record.isAnswer,jdbcType=BIT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -174,7 +194,9 @@
     set id = #{record.id,jdbcType=BIGINT},
       message = #{record.message,jdbcType=VARCHAR},
       user = #{record.user,jdbcType=VARCHAR},
-      status = #{record.status,jdbcType=BIGINT}
+      status = #{record.status,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      is_answer = #{record.isAnswer,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -191,6 +213,12 @@
       <if test="status != null">
         status = #{status,jdbcType=BIGINT},
       </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="isAnswer != null">
+        is_answer = #{isAnswer,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -198,7 +226,9 @@
     update message
     set message = #{message,jdbcType=VARCHAR},
       user = #{user,jdbcType=VARCHAR},
-      status = #{status,jdbcType=BIGINT}
+      status = #{status,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      is_answer = #{isAnswer,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

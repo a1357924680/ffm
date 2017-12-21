@@ -4,7 +4,7 @@
 $(document).ready(function(){
     $("#login").click(function(){
         $.ajax({
-            url:"/user/login",
+            url:"/manager/login",
             type:"post",
             contentType:'application/x-www-form-urlencoded',
             data:{
@@ -14,7 +14,7 @@ $(document).ready(function(){
             success:function(date){
                 if (date.code==200){
                     window.alert(date.msg);
-                    var url = "/view/mainPage";
+                    var url = "/manager/getTypes?pageNum=1";
                     window.location.href=url;
                 }else {
                     window.alert(date.msg);

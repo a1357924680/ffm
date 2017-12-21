@@ -17,6 +17,10 @@ public class Message implements Serializable {
      */
     private Long status;
 
+    private Long userId;
+
+    private Boolean isAnswer;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -51,6 +55,22 @@ public class Message implements Serializable {
         this.status = status;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Boolean getIsAnswer() {
+        return isAnswer;
+    }
+
+    public void setIsAnswer(Boolean isAnswer) {
+        this.isAnswer = isAnswer;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -66,7 +86,9 @@ public class Message implements Serializable {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getMessage() == null ? other.getMessage() == null : this.getMessage().equals(other.getMessage()))
             && (this.getUser() == null ? other.getUser() == null : this.getUser().equals(other.getUser()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()));
+            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+            && (this.getIsAnswer() == null ? other.getIsAnswer() == null : this.getIsAnswer().equals(other.getIsAnswer()));
     }
 
     @Override
@@ -77,6 +99,8 @@ public class Message implements Serializable {
         result = prime * result + ((getMessage() == null) ? 0 : getMessage().hashCode());
         result = prime * result + ((getUser() == null) ? 0 : getUser().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
+        result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
+        result = prime * result + ((getIsAnswer() == null) ? 0 : getIsAnswer().hashCode());
         return result;
     }
 
@@ -90,6 +114,8 @@ public class Message implements Serializable {
         sb.append(", message=").append(message);
         sb.append(", user=").append(user);
         sb.append(", status=").append(status);
+        sb.append(", userId=").append(userId);
+        sb.append(", isAnswer=").append(isAnswer);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

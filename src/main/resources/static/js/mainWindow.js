@@ -9,15 +9,15 @@ $(document).ready(function(){
     });
     $(".model").mouseout(function () {   $(this).attr("style","border:0px solid #7E9DB9;");  });
     $("#sign01").click(function () {
-        var url = "/view/mainPage";
+        var url = "/manager/getTypes?condition=1";
         window.location.href=url;
     });
     $("#sign02").click(function () {
-        var url = "/view/account";
+        var url = "/manager/getMessages?pageNum=1";
         window.location.href=url;
     });
     $("#sign03").click(function () {
-        var url = "/view/home";
+        var url = "/manager/getArticles?pageNum=1";
         window.location.href=url;
     });
     $("#sign04").click(function () {

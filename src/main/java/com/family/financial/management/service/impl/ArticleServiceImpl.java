@@ -31,15 +31,55 @@ public class ArticleServiceImpl implements ArticleService {
     public List<ArticleForm> getArticles(int pageNum) throws FFMException {
         ArticleExample example = new ArticleExample();
         example.setLimit(20);
-        example.setOffset(pageNum-1);
-        example.setOrderByClause("gmt_create desc");
+        example.setOffset((pageNum-1)*20);
+        example.setOrderByClause("id desc");
         List<Article> articles = articleMapper.selectByExample(example);
         List<ArticleForm> articleForm = new ArrayList<ArticleForm>();
         articles.forEach(a->{
-            ArticleForm article = new ArticleForm(a.getId(),a.getTitle());
+            ArticleForm article = new ArticleForm(a.getId(),a.getTitle(),a.getGmtCreate());
             articleForm.add(article);
         });
         return articleForm;
+    }
+
+    /**
+     * 找出ID比当前大的第一个（文章顺序是倒叙的）
+     * @param id
+     * @return
+     * @throws FFMException
+     */
+    @Override
+    public Long getPreId(long id) throws FFMException {
+        Article article = articleMapper.selectByPrimaryKey( id);
+        ArticleExample example = new ArticleExample();
+        example.setOrderByClause("id asc");
+        example.setLimit(1);
+        example.createCriteria().andIdGreaterThan(id);
+        List<Article> articles = articleMapper.selectByExample(example);
+        if (articles==null||articles.size()==0){
+            return Long.valueOf(-1);
+        }
+        return articles.get(0).getId();
+    }
+
+    /**
+     * 找出ID比当前小的第一个
+     * @param id
+     * @return
+     * @throws FFMException
+     */
+    @Override
+    public Long getNextId(long id) throws FFMException {
+        Article article = articleMapper.selectByPrimaryKey( id);
+        ArticleExample example = new ArticleExample();
+        example.setOrderByClause("id desc");
+        example.setLimit(1);
+        example.createCriteria().andIdLessThan(id);
+        List<Article> articles = articleMapper.selectByExample(example);
+        if (articles==null||articles.size()==0){
+            return Long.valueOf(-1);
+        }
+        return articles.get(0).getId();
     }
 
     @Override
@@ -54,12 +94,16 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void addArticle(Article article) throws FFMException {
         article.setGmtCreate(new Date());
-        articleMapper.insertSelective(article);
+        if (article.getId()==null){
+            articleMapper.insertSelective(article);
+        }else {
+            articleMapper.updateByPrimaryKey(article);
+        }
     }
 
     @Override
     public void updateArticle(Article article) throws FFMException {
-        article.setGmtCreate(new Date());
+//        article.setGmtCreate(new Date());
         articleMapper.updateByPrimaryKeySelective(article);
     }
 

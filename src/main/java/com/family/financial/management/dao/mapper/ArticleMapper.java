@@ -3,8 +3,10 @@ package com.family.financial.management.dao.mapper;
 import com.family.financial.management.dao.entity.Article;
 import com.family.financial.management.dao.entity.ArticleExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+@Mapper
 public interface ArticleMapper {
     long countByExample(ArticleExample example);
 

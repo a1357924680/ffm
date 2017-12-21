@@ -12,6 +12,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
 
 /**
  * Created by zhangyiping on 2017/10/17.
@@ -43,9 +44,10 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter {
         addInterceptor.excludePathPatterns("/view/register");
         addInterceptor.excludePathPatterns("/view/register");
         addInterceptor.excludePathPatterns("/manager/login");
+        addInterceptor.excludePathPatterns("/**");
 
         // 拦截配置
-        addInterceptor.addPathPatterns("/**");
+//        addInterceptor.addPathPatterns("/**");
     }
 
     private class SecurityInterceptor extends HandlerInterceptorAdapter {

@@ -67,13 +67,23 @@ public class ArticleController extends BaseController {
         }
     }
 
-    @PostMapping("/insertArticle")
-    public Map<String,String> insertTips(String title,String content){
+    /**
+     * 创建修改都走这个接口
+     * @param id
+     * @param title
+     * @param content
+     * @return
+     */
+    @PostMapping("/createArticle")
+    public Map<String,String> insertTips(String id,String title,String content){
         try {
             if (StringUtils.isEmpty(title)||StringUtils.isEmpty(content)){
                 throw new FFMException(100435,"类型名称不得为空");
             }
             Article article = new Article();
+            if (StringUtils.praseLong(id)>1){
+                article.setId(StringUtils.praseLong(id));
+            }
             article.setContent(content);
             article.setTitle(title);
             articleService.addArticle(article);
@@ -106,10 +116,6 @@ public class ArticleController extends BaseController {
     @PostMapping("/deleteArticle")
     public Map<String,String> deleteArticle(String id){
         try {
-            if (!Objects.equals("admin",getUser().getUserId())){
-                throw new FFMException(199827,"只有管理员才具有该权限");
-            }
-
             articleService.deleteArticle(StringUtils.praseLong(id));
             return getSuccessResult();
         } catch (FFMException e) {

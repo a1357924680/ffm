@@ -1,5 +1,6 @@
 package com.family.financial.management.controller;
 
+import com.family.financial.management.dao.entity.Answer;
 import com.family.financial.management.dao.entity.Message;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.service.interfaces.MessageService;
@@ -7,10 +8,7 @@ import com.family.financial.management.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -64,8 +62,8 @@ public class MessageController extends BaseController {
      * @param id
      * @return
      */
-    @PostMapping("/deleteMessage")
-    public Map<String, String> deleteMessage(String id){
+    @PostMapping("/deleteMessage/{id}")
+    public Map<String, String> deleteMessage(@PathVariable String id){
         try {
             messageService.deleteMessage(StringUtils.praseInteger(id));
             return getSuccessResult();
@@ -83,6 +81,7 @@ public class MessageController extends BaseController {
             }else {
                 throw new FFMException(1234554,"内容不能为空");
             }
+            messageForm.setUserId(getUser().getId());
             messageForm.setUser(getUser().getUserName());
             messageService.addMessage(messageForm);
             return getSuccessResult();
@@ -91,20 +90,10 @@ public class MessageController extends BaseController {
         }
     }
 
-    /**
-     * 还没做，以后再说
-     * @param message
-     * @return
-     */
-    @PostMapping("/answerMessage")
-    public Map<String, String> answerMessage(String message){
+    @GetMapping("getAnswers")
+    public Map<String, String> getAnswers(){
         try {
-
-            if (!StringUtils.isEmpty(message)){
-                messageService.answerMessage(message);
-            }else {
-                throw new FFMException(1234554,"内容不能为空");
-            }
+            List<Answer> answers = messageService.getAnswers(getUser().getId());
             return getSuccessResult();
         } catch (FFMException e) {
             return getErrorResult(e.getCode(),e.getMsg());

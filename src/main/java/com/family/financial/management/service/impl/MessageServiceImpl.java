@@ -1,8 +1,7 @@
 package com.family.financial.management.service.impl;
 
-import com.family.financial.management.dao.entity.GroupRequest;
-import com.family.financial.management.dao.entity.Message;
-import com.family.financial.management.dao.entity.MessageExample;
+import com.family.financial.management.dao.entity.*;
+import com.family.financial.management.dao.mapper.AnswerMapper;
 import com.family.financial.management.dao.mapper.GroupRequestMapper;
 import com.family.financial.management.dao.mapper.MessageMapper;
 import com.family.financial.management.exception.FFMException;
@@ -21,7 +20,8 @@ public class MessageServiceImpl implements MessageService{
     @Resource
     private MessageMapper messageMapper;
     @Resource
-    private GroupRequestMapper requestMapper;
+    private AnswerMapper answerMapper;
+
     @Override
     public int getMessagePage() throws FFMException {
         long count = messageMapper.countByExample(new MessageExample());
@@ -35,8 +35,9 @@ public class MessageServiceImpl implements MessageService{
             throw new FFMException(112325,"页数超出范围");
         }
         MessageExample example = new MessageExample();
+        example.setOrderByClause("id desc");
         example.setLimit(20);
-        example.setOffset(pageNum-1);
+        example.setOffset((pageNum-1)*20);
         List<Message> messages = messageMapper.selectByExample(example);
         return messages;
     }
@@ -57,5 +58,13 @@ public class MessageServiceImpl implements MessageService{
 
     @Override
     public void answerMessage(String message) throws FFMException {
+    }
+
+    @Override
+    public List<Answer> getAnswers(Long userId) throws FFMException {
+        AnswerExample example = new AnswerExample();
+        example.createCriteria().andUserIdBetween(userId,userId);
+        List<Answer> answers = answerMapper.selectByExample(example);
+        return answers;
     }
 }
