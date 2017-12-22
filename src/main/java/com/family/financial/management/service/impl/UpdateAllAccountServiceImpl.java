@@ -48,7 +48,7 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
 
     @Resource
     private ConfigLogMapper logMapper;
-    ;
+
 
     @Override
     public void updateAllAccount(Long userId) {

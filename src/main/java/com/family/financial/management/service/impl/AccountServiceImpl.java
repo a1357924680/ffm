@@ -148,12 +148,8 @@ public class AccountServiceImpl implements AccountService {
         AccountExample example = new AccountExample();
         AccountExample.Criteria criteria = example.createCriteria();
         example.setOrderByClause("gmt_create desc");
-        if (!(StringUtils.isEmpty(conditionForm.getLimit())||StringUtils.isEmpty(conditionForm.getOffset()))){
-            int offset = StringUtils.praseInteger(conditionForm.getOffset());
-            int limit = StringUtils.praseInteger(conditionForm.getLimit());
-            example.setOffset(offset*limit);
-            example.setLimit(limit);
-        }
+        example.setLimit(20);
+        example.setOffset(20*(StringUtils.praseInteger(conditionForm.getPageNum())-1));
         if (!(StringUtils.isEmpty(conditionForm.getMaxAccount()))){
             criteria.andAccountNumLessThanOrEqualTo(StringUtils.praseLong(conditionForm.getMaxAccount()));
         }
@@ -183,6 +179,37 @@ public class AccountServiceImpl implements AccountService {
         }
         return acounts;
     }
+
+    @Override
+    public Long countByConditions(long userId, ConditionForm conditionForm) throws FFMException {
+        AccountExample example = new AccountExample();
+        AccountExample.Criteria criteria = example.createCriteria();
+        example.setOrderByClause("gmt_create desc");
+        example.setLimit(20);
+        example.setOffset(20*(StringUtils.praseInteger(conditionForm.getPageNum())-1));
+        if (!(StringUtils.isEmpty(conditionForm.getMaxAccount()))){
+            criteria.andAccountNumLessThanOrEqualTo(StringUtils.praseLong(conditionForm.getMaxAccount()));
+        }
+        if (!(StringUtils.isEmpty(conditionForm.getMinAccount()))){
+            criteria.andAccountNumGreaterThanOrEqualTo(StringUtils.praseLong(conditionForm.getMinAccount()));
+        }
+        if (!(StringUtils.isEmpty(conditionForm.getFromDate()))){
+            criteria.andGmtCreateGreaterThanOrEqualTo(StringUtils.praseDate(conditionForm.getFromDate()));
+        }
+        if (!(StringUtils.isEmpty(conditionForm.getToDate()))){
+            criteria.andGmtCreateLessThanOrEqualTo(StringUtils.praseDate(conditionForm.getToDate()));
+        }
+        if (!(StringUtils.isEmpty(conditionForm.getTypes()))){
+            List<String> typeStrs = StringUtils.praseList(conditionForm.getTypes());
+            List<Long> types = new ArrayList<>();
+            for (String type: typeStrs) {
+                types.add(StringUtils.praseLong(type));
+            }
+            criteria.andTypeIn(types);
+        }
+        return accountMapper.countByExample(example)/20;
+    }
+
     @Override
     public int getCountByConditions(long userId , ConditionForm conditionForm) throws FFMException{
         List<DefiniteAccount> accounts = getByConditions(userId,conditionForm);

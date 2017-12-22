@@ -18,6 +18,7 @@ public interface AccountService {
     void deleteAccount(long userId , long id) throws FFMException;
     List<DefiniteAccount> getAccountList(long userId , Date fromDate, Date toDate, Integer limit, Integer offset ) throws FFMException;
     List<DefiniteAccount> getByConditions(long userId , ConditionForm conditionForm) throws FFMException;
+    Long countByConditions(long userId , ConditionForm conditionForm) throws FFMException;
     int getCountByConditions(long userId , ConditionForm conditionForm) throws FFMException;
     JSONObject getIndexAccount(long userId) throws FFMException;
 }

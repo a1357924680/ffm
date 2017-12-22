@@ -9,8 +9,7 @@ public class ConditionForm {
     private String maxAccount;
     private String minAccount;
     private String types;
-    private String limit;
-    private String offset;
+    private String pageNum;
 
     public String getFromDate() {
         return fromDate;
@@ -52,19 +51,11 @@ public class ConditionForm {
         this.types = types;
     }
 
-    public String getLimit() {
-        return limit;
+    public String getPageNum() {
+        return pageNum;
     }
 
-    public void setLimit(String limit) {
-        this.limit = limit;
-    }
-
-    public String getOffset() {
-        return offset;
-    }
-
-    public void setOffset(String offset) {
-        this.offset = offset;
+    public void setPageNum(String pageNum) {
+        this.pageNum = pageNum;
     }
 }
