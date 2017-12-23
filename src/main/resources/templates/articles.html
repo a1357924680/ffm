@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link href="../css/mainWindow.css" type="text/css" rel="stylesheet" />
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script th:inline="javascript" src="../js/mainWindow.js"></script>
+
+</head>
+<body>
+
+<div id="header">
+    <div id="ioc"><img class="sign" src="../images/ioc.png" /></div>
+    <h1>家庭财务管理系统</h1>
+    <input type="button" value="新增用户" th:onclick="'javascript:addUser()'"/>
+</div>
+
+<div id="nav">
+    <div class="model" id="sign01"><img class="sign" src="../images/sign01.png" /><br/>系统类型管理<br/></div>
+    <div class="model" id="sign02"><img class="sign" src="../images/sign02.png" /><br/>反馈管理<br/></div>
+    <div class="model" id="sign03"><img class="sign" src="../images/sign03.png" /><br/>贴士管理<br/></div>
+    <div class="model" id="sign04"><img class="sign" src="../images/sign04.png" /><br/>退出登录<br/></div>
+</div>
+
+<div id="section" class="div3">
+    <div><input type="button" class="addArticle" id="addArticle" value="新建" th:onclick="'javascript:addArticle()'"/></div>
+    <table class="table table-hover" style="border-collapse: 0" width="50%">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>标题</th>
+            <th>时间</th>
+            <th>操作</th>
+            <th>操作</th>
+
+        </tr>
+        </thead>
+        <tr th:each="article,iterStat : ${articles}">
+            <th th:text="${iterStat.count}"></th>
+            <th th:text="${article.title}"></th>
+            <th th:text="${#dates.format(article.gmtCreate.toString(), 'yyyy-MM-dd hh:mm:ss')}"></th>
+            <th class="getArticle" th:onclick="'javascript:getArticle('+${article.id}+')'">查看</th>
+            <th class="delete" th:onclick="'javascript:deleteArticle('+${article.id}+')'">删除</th>
+            <!--<a th:href="@{'/message/deleteMessage/'+${message.id}}">删除</a>-->
+        </tr>
+    </table>
+    <nav>
+        <ul class="pagination">
+            <li><a href="">&laquo;</a></li>
+
+            <li>
+                <a th:if="${not isFirstPage}" th:href="@{${'/manager/getMessages'}(pageNum=${pageNum-1},pageSize=${pageSize})}">上一页</a>
+                <a th:if="${isFirstPagee}" href="javascript:void(0);">上一页</a>
+            </li>
+
+            <li th:each="pageNo : ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${pageNum eq pageNo}" href="javascript:void(0);">
+                    <span th:text="${pageNo}"></span>
+                </a>
+
+                <a th:if="${not (pageNum eq pageNo)}" th:href="@{${'/manager/getMessages'}(pageNum=${pageNo},size=${pageSize})}">
+                    <span th:text="${pageNo}"></span>
+                </a>
+            </li>
+            <li>
+                <a th:if="${not isLastPage}" th:href="@{${'/manager/getMessages'}(pageNum=${pageNum+1},size=${pageSize})}">下一页</a>
+                <a th:if="${isLastPage}" href="javascript:void(0);">下一页</a>
+            </li>
+
+            <li><a href="#">&raquo;</a></li>
+        </ul>
+    </nav>
+
+
+</div>
+
+<div id="footer">
+    @家庭财务管理系统
+</div>
+<script type="text/javascript">
+    function getArticle(id) {
+        var _url = "/manager/getArticle/"+id;
+        window.location.href=_url;
+    }
+
+    function addArticle() {
+        var _url = "/manager/addArticle";
+        window.location.href=_url;
+    }
+
+    function deleteArticle(_id) {
+        var _url = "/article/deleteArticle";
+        $.ajax({
+            url: _url,
+            data:{id:_id},
+            type:"post",
+            success:function(date){
+                if(date.code == 200){
+                    alert("删除成功！");
+                    window.location.reload();
+                }else {
+                    alert(date.msg);
+                }
+            }
+        });
+    }
+
+    function addUser() {
+        $.ajax({
+            url: "/manager/checkAdmin",
+            type:"get",
+            success:function(date){
+                if(date.code == 200){
+                    var userName=prompt("请输入账号","");
+                    var password=prompt("请输入密码","");
+                    $.ajax({
+                        url: "/manager/addUser",
+                        type:"post",
+                        data:{userId:userName,
+                            password:password},
+                        success:function(date1){
+                            if(date1.code == 200){
+                                alert("创建成功！");
+                                window.location.reload();
+                            }else {
+                                alert(date1.msg);
+                            }
+                        }
+                    });
+                }else {
+                    alert(date.msg);
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

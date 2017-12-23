@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/mainWindow.css}" />
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script th:src="@{/js/mainWindow.js}"></script>
+</head>
+<body>
+
+<div id="header">
+    <div id="ioc"><img class="sign" th:src="@{/images/ioc.png}" /></div>
+    <h1>家庭财务管理系统</h1>
+</div>
+<div id="functions">
+
+</div>
+<div id="nav">
+    <div class="model" id="sign01"><img class="sign" th:src="@{/images/sign01.png}" /><br/>系统类型管理<br/></div>
+    <div class="model" id="sign02"><img class="sign" th:src="@{/images/sign02.png}" /><br/>反馈管理<br/></div>
+    <div class="model" id="sign03"><img class="sign" th:src="@{/images/sign03.png}" /><br/>贴士管理<br/></div>
+    <div class="model" id="sign04"><img class="sign" th:src="@{/images/sign04.png}" /><br/>退出登录<br/></div>
+</div>
+
+<div id="section" class="div3">
+    <label for="title">title:</label>
+    <input id="title" th:value="${title}" type="text" />
+    <label for="content">content:</label>
+    <input id="content" th:value="${content}" type="text" />
+    <input type="button" id="save" value="新建" th:onclick="'javascript:save('+${id}+')'"/>
+</div>
+
+<div id="footer">
+    @家庭财务管理系统
+</div>
+<script type="text/javascript">
+    function save(_id) {
+        var url = "/article/createArticle";
+        $.post(url,{
+                id:_id,
+                title:$("#title").val(),
+                content:$("#content").val()},
+            function (result) {
+                if (result.code==200){
+                    alert("保存成功");
+                    window.location.href = "/manager/getArticles?pageNum=1";
+                }else{
+                    alert(result.msg);
+                }
+        });
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/mainWindow.css}" />
+    <!--<link href="/css/mainWindow.css" type="text/css" rel="stylesheet" />-->
+    <!--<link rel="stylesheet" href="../css/dialog.css"/>-->
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <!--<script src="/js/dialog.js"></script>-->
+    <script th:src="@{/js/mainWindow.js}"></script>
+
+
+    <!--<script th:inline="javascript" src="/js/mainWindow.js"></script>-->
+    <!--<script th:inline="javascript" src="/js/articles.js"></script>-->
+
+</head>
+<body>
+
+<div id="header">
+    <div id="ioc"><img class="sign" th:src="@{/images/ioc.png}" /></div>
+    <h1>家庭财务管理系统</h1>
+</div>
+
+<div id="nav">
+    <div class="model" id="sign01"><img class="sign" th:src="@{/images/sign01.png}" /><br/>系统类型管理<br/></div>
+    <div class="model" id="sign02"><img class="sign" th:src="@{/images/sign02.png}" /><br/>反馈管理<br/></div>
+    <div class="model" id="sign03"><img class="sign" th:src="@{/images/sign03.png}" /><br/>贴士管理<br/></div>
+    <div class="model" id="sign04"><img class="sign" th:src="@{/images/sign04.png}" /><br/>退出登录<br/></div>
+</div>
+
+<div id="section" class="div3">
+    <h2><th th:text="${article.title}"></th> </h2>
+    <h3><th th:text="${article.gmtCreate}"></th> </h3>
+    <p>
+        <th th:text="${article.content}"></th>
+    </p>
+
+    <div id="functions">
+        <input type="button" id="updateArticle" value="修改" th:onclick="'javascript:updateArticle('+${article.id}+')'"/>
+    </div>
+    <nav>
+        <ul class="pagination">
+            <li><a href="">&laquo;</a></li>
+
+            <li>
+                <a th:if="${not isFirstPage}" th:href="@{'/manager/getArticle/'+${pre}}">上一篇</a>
+                <a th:if="${isFirstPagee}" href="javascript:void(0);">上一篇</a>
+            </li>
+            <li>
+                <a th:if="${not isLastPage}" th:href="@{'/manager/getArticle/'+${next}}">下一篇</a>
+                <a th:if="${isLastPage}" href="javascript:void(0);">下一篇</a>
+            </li>
+
+            <li><a href="#">&raquo;</a></li>
+        </ul>
+    </nav>
+</div>
+
+<div id="footer">
+    @家庭财务管理系统
+</div>
+<script type="text/javascript">
+    function updateArticle(_id) {
+        var _url = "/manager/updateArticle/"+_id;
+        window.location.href=_url;
+    };
+</script>
+</body>
+</html>
