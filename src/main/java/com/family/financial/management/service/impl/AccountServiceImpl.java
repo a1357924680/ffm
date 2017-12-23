@@ -146,7 +146,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<DefiniteAccount> getByConditions(long userId , ConditionForm conditionForm) throws FFMException{
         AccountExample example = new AccountExample();
-        AccountExample.Criteria criteria = example.createCriteria();
+        AccountExample.Criteria criteria = example.createCriteria().andUserIdBetween(userId,userId);
         example.setOrderByClause("gmt_create desc");
 //        example.setLimit(20);
 //        example.setOffset(20*(StringUtils.praseInteger(conditionForm.getPageNum())-1));
