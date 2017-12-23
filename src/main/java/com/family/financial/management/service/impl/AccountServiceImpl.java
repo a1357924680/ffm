@@ -160,7 +160,7 @@ public class AccountServiceImpl implements AccountService {
             criteria.andGmtCreateGreaterThanOrEqualTo(StringUtils.praseDate(conditionForm.getFromDate()));
         }
         if (!(StringUtils.isEmpty(conditionForm.getToDate()))){
-            criteria.andGmtCreateLessThanOrEqualTo(StringUtils.praseDate(conditionForm.getToDate()));
+            criteria.andGmtCreateLessThanOrEqualTo(StringUtils.plusDate(conditionForm.getToDate()));
         }
         if (!(StringUtils.isEmpty(conditionForm.getTypes()))){
             List<String> typeStrs = StringUtils.praseList(conditionForm.getTypes());

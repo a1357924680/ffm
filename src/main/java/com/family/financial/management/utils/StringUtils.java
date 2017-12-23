@@ -41,6 +41,18 @@ public class StringUtils {
             throw new FFMException(ERROR_PARAMETER);
         }
     }
+    public static Date plusDate(String str) throws FFMException {
+        try {
+            DateFormat df= new SimpleDateFormat("yyyy-MM-dd");
+            Date date = df.parse(str);
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            return c.getTime();
+        }catch (Exception e){
+            throw new FFMException(ERROR_PARAMETER);
+        }
+    }
 
     public static List<String> praseList(String str) throws FFMException {
         try {
