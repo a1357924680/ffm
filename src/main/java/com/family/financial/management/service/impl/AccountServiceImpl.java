@@ -181,6 +181,7 @@ public class AccountServiceImpl implements AccountService {
             AccountType type = accountTypeMapper.selectByPrimaryKey(a.getType());
             definiteAccount.setFatherName(AccountTypeEnum.getType(type.getTopLeve()));
             definiteAccount.setTopLevelId(String.valueOf(type.getTopLeve()));
+            definiteAccount.setTypeName(type.getTypeName());
             accountList.add(definiteAccount);
         });
 //
