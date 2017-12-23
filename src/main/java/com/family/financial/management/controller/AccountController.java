@@ -13,10 +13,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -43,7 +40,9 @@ public class AccountController extends BaseController {
     private AccountService accountService;
 
     @PostMapping("/addAccount")
-    public Map<String,String> addAccount(String type,String gmtCreate,String description,String income,String spending){
+    public Map<String,String> addAccount(@RequestParam String type
+            ,@RequestParam String gmtCreate,@RequestParam(defaultValue = "") String description
+            , @RequestParam(defaultValue = "0") String income,@RequestParam(defaultValue = "0") String spending){
         try {
 
             AccountForm accountForm = checkAccountForm(type, gmtCreate, description, income, spending);
