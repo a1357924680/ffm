@@ -64,9 +64,9 @@ public class AccountController extends BaseController {
             throw new FFMException(100901,"type参数异常");
         }
         try {
-         accountForm.setGmtCreate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(gmtCreate));
+         accountForm.setGmtCreate(new SimpleDateFormat("yyyy-MM-dd").parse(gmtCreate));
         }catch (Exception e){
-            throw new FFMException(100901,"type参数异常");
+            throw new FFMException(100902,"时间参数异常");
         }
         if (!StringUtils.isEmpty(income)){
             accountForm.setIncome(Long.parseLong(income));
