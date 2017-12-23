@@ -8,6 +8,7 @@ import com.family.financial.management.model.AccountForm;
 import com.family.financial.management.model.ConditionForm;
 import com.family.financial.management.model.DefiniteAccount;
 import com.family.financial.management.service.interfaces.AccountService;
+import com.family.financial.management.service.interfaces.UserService;
 import com.family.financial.management.utils.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -38,6 +39,8 @@ public class AccountController extends BaseController {
     Logger logger = LoggerFactory.getLogger(AccountController.class);
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/addAccount")
     public Map<String,String> addAccount(@RequestParam String type
@@ -177,6 +180,17 @@ public class AccountController extends BaseController {
             User user = getUser();
             JSONObject json = accountService.getIndexAccount(user.getId());
             return getSuccessResult("accounts",json);
+        } catch (FFMException e) {
+            logger.error(e.getCode()+":"+e.getMsg());
+            return getErrorResult(e.getCode(),e.getMsg());
+        }
+    }
+
+    @GetMapping("getMonthAccounts")
+    public Map<String, String> getMonthAccounts(String year){
+        try {
+            return getSuccessResult("accounts",
+                    userService.getMonthBill(getUser().getId(),StringUtils.praseInteger(year)));
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());
             return getErrorResult(e.getCode(),e.getMsg());
