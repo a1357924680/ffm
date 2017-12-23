@@ -34,7 +34,7 @@ public class StringUtils {
     }
     public static Date praseDate(String str) throws FFMException {
         try {
-            DateFormat df= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateFormat df= new SimpleDateFormat("yyyy-MM-dd");
             Date date = df.parse(str);
             return date;
         }catch (Exception e){
