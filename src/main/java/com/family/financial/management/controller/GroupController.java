@@ -41,10 +41,9 @@ public class GroupController extends BaseController{
             if (user.getGroupId() != 0){
                 throw new FFMException(USER_HAVE_GROUP);
             }
-
             groupService.createGroup(groupName,user);
             updateUserInfo(user.getId());
-            return getSuccessResult();
+            return getSuccessResult("groupId",getUser().getGroupId());
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());
             return getErrorResult(e.getCode(),e.getMsg());

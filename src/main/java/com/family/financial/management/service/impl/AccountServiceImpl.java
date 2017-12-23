@@ -6,6 +6,7 @@ import com.family.financial.management.dao.entity.*;
 import com.family.financial.management.dao.mapper.AccountMapper;
 import com.family.financial.management.dao.mapper.AccountMonthMapper;
 import com.family.financial.management.dao.mapper.AccountTypeBaseMapper;
+import com.family.financial.management.dao.mapper.AccountTypeMapper;
 import com.family.financial.management.emun.AccountTypeEnum;
 import com.family.financial.management.emun.FFMEnum;
 import com.family.financial.management.exception.FFMException;
@@ -44,6 +45,8 @@ public class AccountServiceImpl implements AccountService {
     private UserService userService;
     @Resource
     private AccountMapper accountMapper;
+    @Resource
+    private AccountTypeMapper accountTypeMapper;
     @Resource
     private AccountTypeBaseMapper accountTypeBaseMapper;
     @Resource
@@ -170,14 +173,24 @@ public class AccountServiceImpl implements AccountService {
             }
             criteria.andTypeIn(types);
         }
-
-        Optional<List<DefiniteAccount>> accountList = Optional.ofNullable(accountMapper.selectDefiniteAccount(example));
-        List<DefiniteAccount> acounts = accountList.orElse(new ArrayList<DefiniteAccount>());
-        for (int i = 0; i < acounts.size(); i++) {
-            acounts.get(i).setFatherName(
-                    AccountTypeEnum.getType(StringUtils.praseLong(acounts.get(i).getTopLevelId())));
-        }
-        return acounts;
+        List<Account> accounts = accountMapper.selectByExample(example);
+        List<DefiniteAccount> accountList = new ArrayList<DefiniteAccount>();
+        accounts.forEach(a->{
+            DefiniteAccount definiteAccount = new DefiniteAccount();
+            BeanUtils.copyProperties(a,definiteAccount);
+            AccountType type = accountTypeMapper.selectByPrimaryKey(a.getType());
+            definiteAccount.setFatherName(AccountTypeEnum.getType(type.getTopLeve()));
+            definiteAccount.setTopLevelId(String.valueOf(type.getTopLeve()));
+            accountList.add(definiteAccount);
+        });
+//
+//        Optional<List<DefiniteAccount>> accountList = Optional.ofNullable(accountMapper.selectDefiniteAccount(example));
+//        List<DefiniteAccount> acounts = accountList.orElse(new ArrayList<DefiniteAccount>());
+//        for (int i = 0; i < acounts.size(); i++) {
+//            acounts.get(i).setFatherName(
+//                    AccountTypeEnum.getType(StringUtils.praseLong(acounts.get(i).getTopLevelId())));
+//        }
+        return accountList;
     }
 
     @Override
