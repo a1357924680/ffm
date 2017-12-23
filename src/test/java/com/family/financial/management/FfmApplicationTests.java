@@ -52,18 +52,18 @@ public class FfmApplicationTests {
 
 	}
 
-	@Test
-	public void condition() throws FFMException {
-		ConditionForm conditionForm = new ConditionForm();
-		conditionForm.setFromDate("2017-10-13 16:50:44");
-		conditionForm.setToDate("2017-10-13 16:50:46");
-		conditionForm.setLimit(String.valueOf(10));
-		conditionForm.setOffset(String.valueOf(0));
-		conditionForm.setTypes("99999");
-		conditionForm.setMaxAccount("2");
-		conditionForm.setMinAccount("0");
-		accountService.getByConditions(11,conditionForm);
-
-	}
+//	@Test
+//	public void condition() throws FFMException {
+//		ConditionForm conditionForm = new ConditionForm();
+//		conditionForm.setFromDate("2017-10-13 16:50:44");
+//		conditionForm.setToDate("2017-10-13 16:50:46");
+//		conditionForm.setLimit(String.valueOf(10));
+//		conditionForm.setOffset(String.valueOf(0));
+//		conditionForm.setTypes("99999");
+//		conditionForm.setMaxAccount("2");
+//		conditionForm.setMinAccount("0");
+//		accountService.getByConditions(11,conditionForm);
+//
+//	}
 
 }

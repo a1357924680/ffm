@@ -148,8 +148,8 @@ public class AccountServiceImpl implements AccountService {
         AccountExample example = new AccountExample();
         AccountExample.Criteria criteria = example.createCriteria();
         example.setOrderByClause("gmt_create desc");
-        example.setLimit(20);
-        example.setOffset(20*(StringUtils.praseInteger(conditionForm.getPageNum())-1));
+//        example.setLimit(20);
+//        example.setOffset(20*(StringUtils.praseInteger(conditionForm.getPageNum())-1));
         if (!(StringUtils.isEmpty(conditionForm.getMaxAccount()))){
             criteria.andAccountNumLessThanOrEqualTo(StringUtils.praseLong(conditionForm.getMaxAccount()));
         }
