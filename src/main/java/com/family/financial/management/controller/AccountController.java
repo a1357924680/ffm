@@ -44,7 +44,6 @@ public class AccountController extends BaseController {
             ,@RequestParam String gmtCreate,@RequestParam(defaultValue = "") String description
             , @RequestParam(defaultValue = "0") String income,@RequestParam(defaultValue = "0") String spending){
         try {
-
             AccountForm accountForm = checkAccountForm(type, gmtCreate, description, income, spending);
             User user = getUser();
             accountService.addAccount(user.getId(),accountForm);
