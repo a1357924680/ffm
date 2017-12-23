@@ -40,10 +40,16 @@ public class AccountController extends BaseController {
     private AccountService accountService;
 
     @PostMapping("/addAccount")
-    public Map<String,String> addAccount(@RequestParam String type
-            ,@RequestParam String gmtCreate,@RequestParam(defaultValue = "") String description
-            , @RequestParam(defaultValue = "0") String income,@RequestParam(defaultValue = "0") String spending){
+    public Map<String,String> addAccount(@RequestBody String type
+            ,@RequestBody String gmtCreate,@RequestBody( required = false) String description
+            , @RequestBody(required = false) String income,@RequestBody(required = false) String spending){
         try {
+            if (spending==null){
+                spending ="";
+            }
+            if (income==null){
+                income="";
+            }
             AccountForm accountForm = checkAccountForm(type, gmtCreate, description, income, spending);
             User user = getUser();
             accountService.addAccount(user.getId(),accountForm);
