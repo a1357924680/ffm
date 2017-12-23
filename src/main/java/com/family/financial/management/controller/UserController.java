@@ -3,15 +3,12 @@ package com.family.financial.management.controller;
 import com.family.financial.management.dao.entity.User;
 import com.family.financial.management.model.UserForm;
 import com.family.financial.management.exception.FFMException;
-import com.family.financial.management.model.UserInfoFrom;
 import com.family.financial.management.service.interfaces.UpdateAllAccountService;
 import com.family.financial.management.service.interfaces.UserService;
 import com.family.financial.management.utils.Const;
 import com.family.financial.management.utils.StringUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.ui.Model;
@@ -19,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

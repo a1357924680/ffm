@@ -1,15 +1,12 @@
 package com.family.financial.management.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.family.financial.management.dao.entity.User;
 import com.family.financial.management.dao.mapper.UserMapper;
-import com.family.financial.management.emun.FFMExceptionEnum;
 import com.family.financial.management.exception.FFMException;
-import com.family.financial.management.model.UserInfoFrom;
+import com.family.financial.management.model.UserInfoForm;
 import com.family.financial.management.utils.Const;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import java.util.Map;
 
-import static com.family.financial.management.emun.FFMExceptionEnum.LOGIN_ERROR;
 import static com.family.financial.management.utils.ResultMapUtils.getErrorResult;
 
 /**
@@ -43,7 +39,7 @@ public class BaseController {
         this.request = request;
     }
 
-    protected UserInfoFrom userInfoFrom;
+    protected UserInfoForm userInfoForm;
 
     @Resource
     private UserMapper userMapper;

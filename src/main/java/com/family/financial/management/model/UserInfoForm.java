@@ -3,7 +3,7 @@ package com.family.financial.management.model;
 /**
  * Created by zhangyiping on 2017/9/20.
  */
-public class UserInfoFrom {
+public class UserInfoForm {
 
     private Long id;
 

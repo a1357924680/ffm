@@ -5,7 +5,7 @@ import com.family.financial.management.dao.mapper.*;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.GroupInfoForm;
 import com.family.financial.management.model.Request;
-import com.family.financial.management.model.UserInfoFrom;
+import com.family.financial.management.model.UserInfoForm;
 import com.family.financial.management.service.interfaces.GroupService;
 import com.family.financial.management.service.interfaces.UpdateAllAccountService;
 import org.apache.commons.collections.CollectionUtils;
@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 import static com.family.financial.management.emun.FFMExceptionEnum.*;
 import static com.family.financial.management.utils.Const.ALLOW_APPLY;
-import static com.family.financial.management.utils.Const.REJECT_APPLY;
 
 /**
  * Created by zhangyiping on 2017/9/20.
@@ -205,17 +204,17 @@ public class GroupServiceImpl implements GroupService {
         String[] members = group.getGroupMembers().split(",");
         List<String> memberSId = new ArrayList<>();
         CollectionUtils.addAll(memberSId,members);
-        List<UserInfoFrom> usersForm= new ArrayList<>();
+        List<UserInfoForm> usersForm= new ArrayList<>();
         memberSId.forEach(userid->{
-            UserInfoFrom userInfoFrom = new UserInfoFrom();
+            UserInfoForm userInfoForm = new UserInfoForm();
             updateService.checkConfig(user.getId());
             User tempUser = userMapper.selectByPrimaryKey(Long.parseLong(userid));
-            BeanUtils.copyProperties(tempUser,userInfoFrom);
-            usersForm.add(userInfoFrom);
+            BeanUtils.copyProperties(tempUser, userInfoForm);
+            usersForm.add(userInfoForm);
         });
         GroupInfoForm groupInfoForm = new GroupInfoForm();
         BeanUtils.copyProperties(group,groupInfoForm);
-        groupInfoForm.setUserInfoFroms(usersForm);
+        groupInfoForm.setUserInfoForms(usersForm);
         return groupInfoForm;
     }
 

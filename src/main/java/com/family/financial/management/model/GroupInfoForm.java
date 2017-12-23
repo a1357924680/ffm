@@ -17,7 +17,7 @@ public class GroupInfoForm {
 
     private Long balance;
 
-    private List<UserInfoFrom> userInfoFroms;
+    private List<UserInfoForm> userInfoForms;
 
     public Long getGroupId() {
         return groupId;
@@ -59,11 +59,11 @@ public class GroupInfoForm {
         this.balance = balance;
     }
 
-    public List<UserInfoFrom> getUserInfoFroms() {
-        return userInfoFroms;
+    public List<UserInfoForm> getUserInfoForms() {
+        return userInfoForms;
     }
 
-    public void setUserInfoFroms(List<UserInfoFrom> userInfoFroms) {
-        this.userInfoFroms = userInfoFroms;
+    public void setUserInfoForms(List<UserInfoForm> userInfoForms) {
+        this.userInfoForms = userInfoForms;
     }
 }
