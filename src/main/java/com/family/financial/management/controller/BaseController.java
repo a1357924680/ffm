@@ -54,7 +54,8 @@ public class BaseController {
 
     protected void updateUserInfo(Long id) {
         User user = userMapper.selectByPrimaryKey(id);
-        request.setAttribute(Const.SESSION_USER, user);
+        request.getSession().removeAttribute(Const.SESSION_USER);
+        request.getSession().setAttribute(Const.SESSION_USER, user);
 
     }
 
