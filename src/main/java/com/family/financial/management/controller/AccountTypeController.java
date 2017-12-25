@@ -5,6 +5,7 @@ import com.family.financial.management.dao.entity.User;
 import com.family.financial.management.dao.mapper.AccountTypeMapper;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.AccountTypeForm;
+import com.family.financial.management.model.BasicTypeModel;
 import com.family.financial.management.model.UserAndBasicTypes;
 import com.family.financial.management.service.interfaces.AccountTypeService;
 import com.family.financial.management.utils.StringUtils;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -96,8 +98,10 @@ public class AccountTypeController extends BaseController{
         try {
             User user = getUser();
             List<UserAndBasicTypes> list = accountTypeService.getAllAccount(user.getId());
-
-            return getSuccessResult("types",list.stream().collect(Collectors.groupingBy(UserAndBasicTypes::getTopName)));
+            Map<String,List> map = new HashMap<String,List>();
+            map.put("types",list);
+            map.put("topTypes",list.stream().map(ty->new BasicTypeModel(ty.getTopLeve(),ty.getTopName())).distinct().collect(Collectors.toList()));
+            return getSuccessResult("types",map);
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());
             return getErrorResult(e.getCode(),e.getMsg());
