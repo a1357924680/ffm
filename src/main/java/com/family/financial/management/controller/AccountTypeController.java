@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.family.financial.management.utils.ResultMapUtils.getErrorResult;
 import static com.family.financial.management.utils.ResultMapUtils.getSuccessResult;
@@ -95,7 +96,8 @@ public class AccountTypeController extends BaseController{
         try {
             User user = getUser();
             List<UserAndBasicTypes> list = accountTypeService.getAllAccount(user.getId());
-            return getSuccessResult("types",list);
+
+            return getSuccessResult("types",list.stream().collect(Collectors.groupingBy(UserAndBasicTypes::getTopName)));
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());
             return getErrorResult(e.getCode(),e.getMsg());

@@ -97,7 +97,8 @@ public class GroupServiceImpl implements GroupService {
         GroupRequestExample example = new GroupRequestExample();
         example.createCriteria().andFromUserEqualTo(user.getId())
                 .andGroupIdEqualTo(groupId).andStatusEqualTo((long) 0);
-        if (groupRequestMapper.selectByExample(example)!=null){
+        List<GroupRequest> l =groupRequestMapper.selectByExample(example);
+        if (!(l==null||l.size()==0)){
             throw new FFMException(423121,"您已经申请加入该组了");
         }
         GroupRequest groupRequest = new GroupRequest();
@@ -147,8 +148,7 @@ public class GroupServiceImpl implements GroupService {
     public List<Request> getGroupRequests(User user) throws FFMException {
         GroupRequestExample requestExample = new GroupRequestExample();
         GroupRequestExample.Criteria criteria = requestExample.createCriteria();
-        criteria.andToUserEqualTo(user.getId());
-        criteria.andStatusEqualTo((long) 0);
+        criteria.andToUserEqualTo(user.getId()).andStatusEqualTo((long) 0);
         List<GroupRequest> requests = new ArrayList<>();
         requests = groupRequestMapper.selectByExample(requestExample);
         List<Request> request = new ArrayList<>();

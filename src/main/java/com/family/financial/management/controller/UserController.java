@@ -93,12 +93,12 @@ public class UserController extends BaseController{
 
 
     @PostMapping("/updateUser")
-    public Map<String,String> updateUser(@RequestParam MultipartFile filePhoto,
+    public Map<String,String> updateUser(String filePhoto,
                                          String userName,String password,String mobile,String sex){
         try {
             UserForm userForm = new UserForm();
             userForm.setMobile(mobile);
-            userForm.setFilePhoto(filePhoto);
+//            userForm.setFilePhoto(filePhoto);
             userForm.setPassword(password);
             userForm.setSex(sex);
             userForm.setUserName(userName);
