@@ -44,7 +44,7 @@ public class AccountTypeServiceImpl implements AccountTypeService{
     private AccountTypeService accountTypeService;
 
     @Override
-    public void createAccountType(AccountTypeForm accountTypeForm) throws FFMException {
+    public AccountType createAccountType(AccountTypeForm accountTypeForm) throws FFMException {
         if (!checkTopType(accountTypeForm.getTopLeve())){
             throw new FFMException(TOPTYPE_NOT_EXIST);
         }
@@ -52,6 +52,7 @@ public class AccountTypeServiceImpl implements AccountTypeService{
         BeanUtils.copyProperties(accountTypeForm,accountType);
         accountType.setIsBasic(false);
         accountTypeMapper.insertSelective(accountType);
+        return accountType;
     }
 
     @Override

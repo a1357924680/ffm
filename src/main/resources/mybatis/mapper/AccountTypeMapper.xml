@@ -113,7 +113,7 @@
     values (#{id,jdbcType=BIGINT}, #{typeName,jdbcType=VARCHAR}, #{topLeve,jdbcType=BIGINT}, 
       #{userId,jdbcType=BIGINT}, #{isBasic,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="com.family.financial.management.dao.entity.AccountType">
+  <insert id="insertSelective" parameterType="com.family.financial.management.dao.entity.AccountType" useGeneratedKeys="true" keyProperty="id">
     insert into account_type
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

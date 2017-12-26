@@ -1,6 +1,7 @@
 package com.family.financial.management.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.family.financial.management.dao.entity.AccountType;
 import com.family.financial.management.dao.entity.User;
 import com.family.financial.management.dao.mapper.AccountTypeMapper;
 import com.family.financial.management.exception.FFMException;
@@ -43,12 +44,12 @@ public class AccountTypeController extends BaseController{
             AccountTypeForm accountTypeForm = checkAccountType(typeName,topLevel);
             User user = getUser();
             accountTypeForm.setUserId(user.getId());
-            accountTypeService.createAccountType(accountTypeForm);
+            AccountType accountType = accountTypeService.createAccountType(accountTypeForm);
+            return getSuccessResult("type",accountType);
         } catch (FFMException e) {
             e.printStackTrace();
             return getErrorResult(e.getCode(),e.getMsg());
         }
-        return getSuccessResult();
     }
 
     @PostMapping("/deleteAccountType")
