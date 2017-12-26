@@ -8,7 +8,6 @@ import com.family.financial.management.dao.mapper.AccountMonthMapper;
 import com.family.financial.management.dao.mapper.AccountTypeBaseMapper;
 import com.family.financial.management.dao.mapper.AccountTypeMapper;
 import com.family.financial.management.emun.AccountTypeEnum;
-import com.family.financial.management.emun.FFMEnum;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.AccountForm;
 import com.family.financial.management.model.ConditionForm;
@@ -69,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void updateAccount(long userId , AccountForm accountForm) throws FFMException{
+    public DefiniteAccount updateAccount(long userId , AccountForm accountForm) throws FFMException{
         AccountExample example = new AccountExample();
         AccountExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(userId);
@@ -91,6 +90,16 @@ public class AccountServiceImpl implements AccountService {
         }catch (Exception e){
             throw new FFMException(DATABASE_ERROR);
         }
+        example.clear();
+        example.createCriteria().andIdEqualTo(accountForm.getId());
+        Account a = accountMapper.selectByPrimaryKey(accountForm.getId());
+        DefiniteAccount definiteAccount = new DefiniteAccount();
+        BeanUtils.copyProperties(a,definiteAccount);
+        AccountType type = accountTypeMapper.selectByPrimaryKey(a.getType());
+        definiteAccount.setFatherName(AccountTypeEnum.getType(type.getTopLeve()));
+        definiteAccount.setTopLevelId(String.valueOf(type.getTopLeve()));
+        definiteAccount.setTypeName(type.getTypeName());
+        return definiteAccount;
     }
 
     @Override

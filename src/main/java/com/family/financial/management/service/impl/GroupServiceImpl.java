@@ -210,11 +210,13 @@ public class GroupServiceImpl implements GroupService {
             updateService.checkConfig(user.getId());
             User tempUser = userMapper.selectByPrimaryKey(Long.parseLong(userid));
             BeanUtils.copyProperties(tempUser, userInfoForm);
+            userInfoForm.setMobile(String.valueOf(tempUser.getMobile()));
             usersForm.add(userInfoForm);
         });
         GroupInfoForm groupInfoForm = new GroupInfoForm();
         BeanUtils.copyProperties(group,groupInfoForm);
         groupInfoForm.setUserInfoForms(usersForm);
+        groupInfoForm.setManagerId(group.getGroupManager());
         return groupInfoForm;
     }
 

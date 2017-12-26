@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface AccountService {
     void addAccount(long userId , AccountForm accountForm) throws FFMException;
-    void updateAccount(long userId , AccountForm accountForm) throws FFMException;
+    DefiniteAccount updateAccount(long userId , AccountForm accountForm) throws FFMException;
     void deleteAccount(long userId , long id) throws FFMException;
     List<DefiniteAccount> getAccountList(long userId , Date fromDate, Date toDate, Integer limit, Integer offset ) throws FFMException;
     List<DefiniteAccount> getByConditions(long userId , ConditionForm conditionForm) throws FFMException;

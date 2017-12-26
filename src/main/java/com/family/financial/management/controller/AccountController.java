@@ -98,12 +98,12 @@ public class AccountController extends BaseController {
             AccountForm accountForm = checkAccountForm(type, gmtCreate, description, income, spending);
             accountForm.setId(StringUtils.praseLong(id));
             User user = getUser();
-            accountService.updateAccount(user.getId(),accountForm);
+            DefiniteAccount definiteAccount = accountService.updateAccount(user.getId(),accountForm);
+            return getSuccessResult("account",definiteAccount);
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());
             return getErrorResult(e.getCode(),e.getMsg());
         }
-        return getSuccessResult();
     }
 
     @PostMapping("/deleteAccount")

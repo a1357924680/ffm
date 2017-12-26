@@ -17,6 +17,16 @@ public class GroupInfoForm {
 
     private Long balance;
 
+    private Long managerId;
+
+    public Long getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(Long managerId) {
+        this.managerId = managerId;
+    }
+
     private List<UserInfoForm> userInfoForms;
 
     public Long getGroupId() {
