@@ -1,3 +1,7 @@
+* {
+    margin: 0;
+    padding: 0;
+}
 .body1{
     /*background:url("../static/images/6038.jpg_wh300.jpg");*/
     margin:0px;
@@ -12,11 +16,15 @@
     margin-left:-10px;
 }
 #header {
-    background-color: #ffac77;
+    background-color: #333;
     height: 100px;
-    color:white;
+    color:#fff;
     text-align:center;
     padding:5px;
+    box-sizing: border-box
+}
+#header h1 {
+    font-weight: bold;
 }
 #ioc{
     width: 148px;
@@ -24,38 +32,42 @@
     float: left;
     text-align: center;
 }
+#ioc img {
+    width: 80px;
+}
+.content .form-control {
+    width: inherit;
+    display: inline-block;
+}
 .model{
-    height: 180px;
+    padding: 30px 0;
     width: 90px;
     text-align: center;
 }
 .sign{
-    width: 90px;
-    height: 90px;
-
+    width: 50px;
+}
+.content {
+    position: relative;
+    height: calc(100vh - 130px);
 }
 #nav {
-    float: left;
     line-height:30px;
     background-color:#eeeeee;
-    height:700px;
+    height:100%;
     width:100px;
-    float:left;
     padding:5px;
-}
-#section {
-    float:left;
-    padding:10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 20;
 }
 .div3{
-    position:absolute;
-    top:150px;
-    left:200px;
-    width:1050px;
-    height:640px;
-    background:#99FFCC;
+    height:100%;
+    padding: 10px 100px 10px 200px;
     filter:alpha(opacity=96);
     opacity:0.9;
+    overflow-y: scroll;
     border: 0px solid #000;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -70,11 +82,11 @@
     top:10px;
     border-bottom:1px dashed #000000;
 }
-.btn{
+#header .btn{
     position:absolute;
     top:8px;
     width:100px;
-    left:930px;
+    right:20px;
 }
 .btn a{
     text-align:center;

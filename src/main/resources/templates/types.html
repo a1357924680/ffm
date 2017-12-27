@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Title</title>
-    <link href="../css/mainWindow.css" type="text/css" rel="stylesheet" />
-    <!--<link href="../static/css/form-grey.css" type="text/css" rel="stylesheet" />-->
-    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
-    <script th:inline="javascript" src="../js/mainWindow.js"></script>
-    <!--<link href="../css/mainWindow.css" type="text/css" rel="stylesheet" />-->
-    <!--<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>-->
-    <!--<script  src="../js/mainWindow.js"></script>-->
+<meta charset="UTF-8"/>
+<title>Title</title>
+<link href="../css/mainWindow.css" type="text/css" rel="stylesheet" />
+<!--<link href="../static/css/form-grey.css" type="text/css" rel="stylesheet" />-->
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script th:inline="javascript" src="../js/mainWindow.js"></script>
+<!--<link href="../css/mainWindow.css" type="text/css" rel="stylesheet" />-->
+<!--<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>-->
+<!--<script  src="../js/mainWindow.js"></script>-->
 </head>
 <body>
 
 <div id="header">
     <div id="ioc"><img class="sign" src="../images/ioc.png" /></div>
     <h1>家庭财务管理系统</h1>
-    <input type="button" value="新增用户" th:onclick="'javascript:addUser()'"/>
+    <input type="button" class="btn btn-default" value="新增用户" th:onclick="'javascript:addUser()'"/>
 </div>
-
-<div id="nav">
+<div class="content">
+    <div id="nav">
     <div class="model" id="sign01"><img class="sign" src="../images/sign01.png" /><br/>系统类型管理<br/></div>
     <div class="model" id="sign02"><img class="sign" src="../images/sign02.png" /><br/>反馈管理<br/></div>
     <div class="model" id="sign03"><img class="sign" src="../images/sign03.png" /><br/>贴士管理<br/></div>
@@ -28,7 +30,7 @@
 
 <div id="section" class="div3">
     <div>
-        <select id="typeId" th:onchange="'javascript:getType()'">
+        <select id="typeId" class="form-control" th:onchange="'javascript:getType()'">
             <option value="1">日常用品</option>
             <option value="2">服装鞋帽</option>
             <option value="3">通讯费</option>
@@ -58,7 +60,7 @@
             <option value="27">其他收入</option>
             <option value="28">未分类</option>
         </select>
-        <input type="text" id="typeName"/>
+        <input type="text" class="form-control" id="typeName"/>
         <!--<input type="button" value="查询" th:onclick="'javascript:getType()'"/>-->
         <input type="button" value="添加" th:onclick="'javascript:addType()'"/>
     </div>
@@ -76,6 +78,8 @@
             <th th:text="${type.basicTypeName}"></th>
         </tr>
     </table>
+</div>
+
 </div>
 
 <div id="footer">

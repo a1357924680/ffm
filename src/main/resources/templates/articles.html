@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Title</title>
-    <link href="../css/mainWindow.css" type="text/css" rel="stylesheet" />
-    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
-    <script th:inline="javascript" src="../js/mainWindow.js"></script>
-
+<meta charset="UTF-8"/>
+<title>Title</title>
+<link href="../css/mainWindow.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script th:inline="javascript" src="../js/mainWindow.js"></script>
 </head>
 <body>
 
 <div id="header">
     <div id="ioc"><img class="sign" src="../images/ioc.png" /></div>
     <h1>家庭财务管理系统</h1>
-    <input type="button" value="新增用户" th:onclick="'javascript:addUser()'"/>
+    <input type="button" class="btn btn-default" value="新增用户" th:onclick="'javascript:addUser()'"/>
 </div>
 
-<div id="nav">
+<div class="content">
+    <div id="nav">
     <div class="model" id="sign01"><img class="sign" src="../images/sign01.png" /><br/>系统类型管理<br/></div>
     <div class="model" id="sign02"><img class="sign" src="../images/sign02.png" /><br/>反馈管理<br/></div>
     <div class="model" id="sign03"><img class="sign" src="../images/sign03.png" /><br/>贴士管理<br/></div>
@@ -24,7 +26,7 @@
 </div>
 
 <div id="section" class="div3">
-    <div><input type="button" class="addArticle" id="addArticle" value="新建" th:onclick="'javascript:addArticle()'"/></div>
+    <div><input type="button" class="addArticle btn btn-info" id="addArticle" value="新建" th:onclick="'javascript:addArticle()'"/></div>
     <table class="table table-hover" style="border-collapse: 0" width="50%">
         <thead>
         <tr>
@@ -40,8 +42,12 @@
             <th th:text="${iterStat.count}"></th>
             <th th:text="${article.title}"></th>
             <th th:text="${#dates.format(article.gmtCreate.toString(), 'yyyy-MM-dd hh:mm:ss')}"></th>
-            <th class="getArticle" th:onclick="'javascript:getArticle('+${article.id}+')'">查看</th>
-            <th class="delete" th:onclick="'javascript:deleteArticle('+${article.id}+')'">删除</th>
+            <th class="getArticle" >
+                <button class="btn btn-primary" th:onclick="'javascript:getArticle('+${article.id}+')'">查看</button>
+            </th>
+            <th class="delete" >
+                <button class="btn btn-danger" th:onclick="'javascript:deleteArticle('+${article.id}+')'">删除</button>
+            </th>
             <!--<a th:href="@{'/message/deleteMessage/'+${message.id}}">删除</a>-->
         </tr>
     </table>
@@ -74,6 +80,8 @@
 
 
 </div>
+</div>
+
 
 <div id="footer">
     @家庭财务管理系统

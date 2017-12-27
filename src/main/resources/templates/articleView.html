@@ -6,7 +6,9 @@
     <link rel="stylesheet" th:href="@{/css/mainWindow.css}" />
     <!--<link href="/css/mainWindow.css" type="text/css" rel="stylesheet" />-->
     <!--<link rel="stylesheet" href="../css/dialog.css"/>-->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!--<script src="/js/dialog.js"></script>-->
     <script th:src="@{/js/mainWindow.js}"></script>
 
@@ -21,8 +23,8 @@
     <div id="ioc"><img class="sign" th:src="@{/images/ioc.png}" /></div>
     <h1>家庭财务管理系统</h1>
 </div>
-
-<div id="nav">
+<div class="content">
+    <div id="nav">
     <div class="model" id="sign01"><img class="sign" th:src="@{/images/sign01.png}" /><br/>系统类型管理<br/></div>
     <div class="model" id="sign02"><img class="sign" th:src="@{/images/sign02.png}" /><br/>反馈管理<br/></div>
     <div class="model" id="sign03"><img class="sign" th:src="@{/images/sign03.png}" /><br/>贴士管理<br/></div>
@@ -37,7 +39,7 @@
     </p>
 
     <div id="functions">
-        <input type="button" id="updateArticle" value="修改" th:onclick="'javascript:updateArticle('+${article.id}+')'"/>
+        <input type="button" class="btn btn-primary" id="updateArticle" value="修改" th:onclick="'javascript:updateArticle('+${article.id}+')'"/>
     </div>
     <nav>
         <ul class="pagination">
@@ -56,6 +58,8 @@
         </ul>
     </nav>
 </div>
+</div>
+
 
 <div id="footer">
     @家庭财务管理系统

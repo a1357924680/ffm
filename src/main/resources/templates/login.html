@@ -1,27 +1,90 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Title</title>
-    <link href="../css/login_style.css" type="text/css" rel="stylesheet" />
-    <link href="../css/form-grey.css" type="text/css" rel="stylesheet" />
-    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
-    <script  src="../js/login.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>登录</title>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style lang="stylesheet/css">
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    width: 100%;
+    height: 100%;
+    background: url("../images/backgroud_login.jpg");
+    background-size:cover;
+}
+#login {
+    position: relative;
+    height: 100vh;
+}
+.login-form {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 2px 2px #aaa;
+}
+.login-form>h1 {
+    margin: 20px 0
+}
+</style>
 </head>
 <body>
-<div class="heading"></div>
-<div class="login-form">
-
-    <form class="basic-grey">
+<div id="login">
+    <div class="login-form">
         <h1>家庭财务管理系统·后台系统</h1>
-        <span>账号：</span><input  id="username" type="text" /><br/>
-        <span>密码：</span><input  id="password" type="password" />
-    <div>
-        <input type="button" id="login" value="登录"/><br/><br/>
-        <input type="button" id="register" value="注册"/>
+        <form>
+            <div class="form-group">
+                <label for="exampleInputEmail1">账号</label>
+                <input type="email" class="form-control" id="username"/>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">密码</label>
+                <input type="password" class="form-control" id="password"/>
+            </div>
+            <div class="form-group" style="text-align: center;">
+                <button type="button" id="signIn" class="btn btn-primary">登录</button>
+                <button type="button" id="signUp" class="btn btn-success">注册</button>
+            </div>
+        </form>
     </div>
-    </form>
 </div>
+<script>
+    $(document).ready(function(){
+        $("#signIn").click(function(){
+            $.ajax({
+                url:"/manager/login",
+                type:"post",
+                contentType:'application/x-www-form-urlencoded',
+                data:{
+                    "userId":$("#username").val(),
+                    "password":$("#password").val()
+                },
+                success:function(date){
+                    if (date.code==200){
+                        window.alert(date.msg);
+                        var url = "/manager/getTypes?pageNum=1";
+                        window.location.href=url;
+                    }else {
+                        window.alert(date.msg);
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
 
+                }
+            });
+        });
+        $("#signUp").click(function () {
+            var url = "/view/register";window.location.href=url;
+        })
+    });
+</script>
 </body>
 </html>
