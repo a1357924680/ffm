@@ -34,9 +34,9 @@ public class MemberController extends BaseController{
     @Autowired
     private UserConfigService userConfigService;
     @GetMapping("/getConfig")
-    private Map<String,String> getConfig(String type1,String type2){
+    private Map<String,String> getConfig(String userId){
         try {
-            UserConfig userConfig = userConfigService.getUserConfig(getUser().getId());
+            UserConfig userConfig = userConfigService.getUserConfig(StringUtils.praseLong( userId));
             return getSuccessResult("userConfig",userConfig);
         } catch (FFMException e) {
             logger.error(e.getMsg());
