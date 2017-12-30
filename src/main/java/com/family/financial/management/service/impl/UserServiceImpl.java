@@ -1,16 +1,13 @@
 package com.family.financial.management.service.impl;
 
-import com.family.financial.management.dao.entity.AccountMonth;
-import com.family.financial.management.dao.entity.AccountMonthExample;
-import com.family.financial.management.dao.entity.User;
-
-import com.family.financial.management.dao.entity.UserExample;
+import com.family.financial.management.dao.entity.*;
 
 import com.family.financial.management.dao.mapper.AccountMonthMapper;
 import com.family.financial.management.dao.mapper.UserMapper;
 import com.family.financial.management.model.UserForm;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.service.interfaces.UpdateAllAccountService;
+import com.family.financial.management.service.interfaces.UserConfigService;
 import com.family.financial.management.service.interfaces.UserService;
 
 import net.coobird.thumbnailator.Thumbnails;
@@ -44,7 +41,8 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Resource
     private AccountMonthMapper accountMonthMapper;
-
+    @Autowired
+    private UserConfigService userConfigService;
     @Autowired
     private UpdateAllAccountService updateAllAccountService;
 
@@ -87,6 +85,7 @@ public class UserServiceImpl implements UserService {
         user.setPhoto(photo);
         try {
             userMapper.insertSelective(user);
+            userConfigService.insertUserConfig(user.getId(),0,0);
         }catch (Exception e){
             throw new FFMException(SYSTEM_ERROR);
         }

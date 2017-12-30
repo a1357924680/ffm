@@ -21,4 +21,5 @@ public interface AccountService {
     Long countByConditions(long userId , ConditionForm conditionForm) throws FFMException;
     int getCountByConditions(long userId , ConditionForm conditionForm) throws FFMException;
     JSONObject getIndexAccount(long userId) throws FFMException;
+    List<DefiniteAccount> groupByaisc(long userId,ConditionForm conditionForm) throws FFMException;
 }

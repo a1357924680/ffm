@@ -169,8 +169,7 @@ public class AccountController extends BaseController {
     public Map<String, String> getByBasicConditions(ConditionForm conditionForm){
         try {
             User user = getUser();
-//            long count = accountService.countByConditions(user.getId(),conditionForm);
-            List<DefiniteAccount> definiteAccounts = accountService.getByConditions(user.getId(),conditionForm);
+            List<DefiniteAccount> definiteAccounts = accountService.groupByaisc(user.getId(),conditionForm);
             return getSuccessResult("accounts",definiteAccounts);
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());

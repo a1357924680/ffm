@@ -277,6 +277,21 @@ public class AccountServiceImpl implements AccountService {
         return jsonObject;
     }
 
+    @Override
+    public List<DefiniteAccount> groupByaisc(long userId, ConditionForm conditionForm) throws FFMException {
+        List<Account> accounts = accountMapper.selectGroupAccounts(conditionForm.getFromDate(),conditionForm.getToDate(),userId);
+        List<DefiniteAccount> accountList = new ArrayList<DefiniteAccount>();
+        accounts.forEach(a->{
+            DefiniteAccount definiteAccount = new DefiniteAccount();
+            BeanUtils.copyProperties(a,definiteAccount);
+            definiteAccount.setFatherName(AccountTypeEnum.getType(a.getType()));
+            definiteAccount.setTopLevelId(String.valueOf(a.getType()));
+            definiteAccount.setTypeName(definiteAccount.getFatherName());
+            accountList.add(definiteAccount);
+        });
+        return accountList;
+    }
+
 
     public JSONObject getSpendingAndIncomeByTime(String fromDate, String toDate, Long userId){
         Optional<Account> account = Optional.ofNullable(accountMapper.selectByDate(fromDate,toDate,userId));
