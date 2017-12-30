@@ -160,6 +160,24 @@ public class AccountController extends BaseController {
         }
     }
 
+    /**
+     * 从大类型聚合
+     * @param conditionForm
+     * @return
+     */
+    @GetMapping("getByBasicConditions")
+    public Map<String, String> getByBasicConditions(ConditionForm conditionForm){
+        try {
+            User user = getUser();
+//            long count = accountService.countByConditions(user.getId(),conditionForm);
+            List<DefiniteAccount> definiteAccounts = accountService.getByConditions(user.getId(),conditionForm);
+            return getSuccessResult("accounts",definiteAccounts);
+        } catch (FFMException e) {
+            logger.error(e.getCode()+":"+e.getMsg());
+            return getErrorResult(e.getCode(),e.getMsg());
+        }
+    }
+
     @GetMapping("getCount")
     public Map<String, String> getByConditionsCount(ConditionForm conditionForm){
         try {

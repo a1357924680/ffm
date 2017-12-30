@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @author 
  */
 public class AccountMonth implements Serializable {
-    private Byte id;
+    private Long id;
 
     private Long userId;
 
@@ -20,11 +20,11 @@ public class AccountMonth implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Byte getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Byte id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

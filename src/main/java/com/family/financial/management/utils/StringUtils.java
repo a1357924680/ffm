@@ -5,6 +5,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.*;
 import java.util.*;
 
 import static com.family.financial.management.emun.FFMExceptionEnum.ERROR_PARAMETER;
@@ -48,6 +49,48 @@ public class StringUtils {
             Calendar c = Calendar.getInstance();
             c.setTime(date);
             c.add(Calendar.DAY_OF_MONTH, 1);
+            return c.getTime();
+        }catch (Exception e){
+            throw new FFMException(ERROR_PARAMETER);
+        }
+    }
+    public static Date plusDate(Date date) throws FFMException {
+        try {
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            return c.getTime();
+        }catch (Exception e){
+            throw new FFMException(ERROR_PARAMETER);
+        }
+    }
+
+    public static LocalTime UDateToLocalTime(Date date) {
+        Instant instant = date.toInstant();
+        ZoneId zone = ZoneId.systemDefault();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zone);
+        LocalTime localTime = localDateTime.toLocalTime();
+        return localTime;
+    }
+
+    public static LocalDate UDateToLocalDate(Date date) {
+        Instant instant = date.toInstant();
+        ZoneId zone = ZoneId.systemDefault();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zone);
+        return localDateTime.toLocalDate();
+    }
+
+    public static Date LocalDateToUdate(LocalDate localDate) {
+        ZoneId zone = ZoneId.systemDefault();
+        Instant instant = localDate.atStartOfDay().atZone(zone).toInstant();
+        return Date.from(instant);
+    }
+
+    public static Date plusDate(Date date,int i) throws FFMException {
+        try {
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DAY_OF_MONTH, i);
             return c.getTime();
         }catch (Exception e){
             throw new FFMException(ERROR_PARAMETER);

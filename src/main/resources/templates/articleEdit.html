@@ -43,7 +43,7 @@
             <textarea id="content" th:value="${content}" class="form-control" rows="5"></textarea>
         </div>
         <div class="form-group">
-            <input type="button" class="btn btn-primary" id="save" value="新建" th:onclick="'javascript:save('+${id}+')'"/>
+            <input type="button" class="btn btn-primary" id="save" value="新建" th:onclick="'javascript:save1('+${id}+')'"/>
         </div>
     </form>
 </div>
@@ -54,7 +54,7 @@
     @家庭财务管理系统
 </div>
 <script type="text/javascript">
-    function save(_id) {
+    function save1(_id) {
         var url = "/article/createArticle";
         $.post(url,{
                 id:_id,

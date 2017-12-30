@@ -6,6 +6,7 @@ import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.AccountForm;
 import com.family.financial.management.service.interfaces.AccountService;
 import com.family.financial.management.service.interfaces.UpdateAllAccountService;
+import com.family.financial.management.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,11 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import static com.family.financial.management.emun.AccountConfig.*;
+import static com.family.financial.management.utils.StringUtils.LocalDateToUdate;
+import static com.family.financial.management.utils.StringUtils.UDateToLocalDate;
+import static com.family.financial.management.utils.StringUtils.plusDate;
 
+import com.family.financial.management.utils.StringUtils;
 /**
  * Created by zhangyiping on 2017/10/14.
  */
@@ -178,106 +183,100 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
     }
 
     @Override
-    public void checkConfig(long userId) {
+    public void checkConfig(long userId) throws FFMException {
         AccountConfigExample example = new AccountConfigExample();
         example.createCriteria().andUserIdEqualTo(userId);
         List<AccountConfig> configs = configMapper.selectByExample(example);
-        for (AccountConfig a :
-                configs) {
-            boolean done = checkDone(a);
-            if (!done) {
-                AccountForm accountForm = new AccountForm();
-                accountForm.setDescription(a.getDescription());
-                accountForm.setGmtCreate(new Date());
-                accountForm.setType(a.getType());
-                if (a.getIsSpending()) {
-                    accountForm.setSpending(a.getMoney());
-                    accountForm.setIncome(0L);
-                    accountForm.setAccountNum(0 - a.getMoney());
-                } else {
-                    accountForm.setSpending(0L);
-                    accountForm.setIncome(a.getMoney());
-                    accountForm.setAccountNum(a.getMoney());
-                }
-                try {
-                    accountService.addAccount(userId, accountForm);
-                } catch (FFMException e) {
-                    e.printStackTrace();
-                }
-                ConfigLog log = new ConfigLog();
-                log.setTime(new Date());
-                log.setConfigId(a.getId());
-                logMapper.insert(log);
-            }
+        for (AccountConfig a : configs) {
+            checkDone(a);
         }
 
     }
 
-    private boolean checkDone(AccountConfig a) {
+    private void checkDone(AccountConfig a) throws FFMException {
         ConfigLogExample example = new ConfigLogExample();
-        example.createCriteria();
-        LocalDate date = LocalDate.now();
+        example.setOrderByClause("time desc");
+        example.setLimit(1);
+        example.createCriteria().andConfigIdBetween(a.getId(),a.getId());
+        List<ConfigLog> configLog = logMapper.selectByExample(example);
+        if (configLog==null||configLog.size()==0){
+            //从头插入
+            insertAccount(UDateToLocalDate(a.getGmtCreate()),a);
+        }else if (!configLog.get(0).getTime().before(new Date())){
+            //从该日期开始
+            insertAccount(UDateToLocalDate(configLog.get(0).getTime()).plusDays(1),a);
+        }
+
+    }
+
+    private void insertAccount(LocalDate gmtCreate,AccountConfig a) throws FFMException {
+        int i = 0;
+        Date now = new Date();
         if (a.getTime().equals(TYPE1.getType())) {
-            example.getOredCriteria().get(0).andTimeGreaterThan(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            example.getOredCriteria().get(0).andTimeLessThanOrEqualTo(Date.from(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            List<ConfigLog> configLog = logMapper.selectByExample(example);
-            if (configLog == null || configLog.size() == 0) {
-                return false;
-            } else {
-                return true;
+            while (gmtCreate.isBefore(LocalDate.now())){
+                insert(a,LocalDateToUdate(gmtCreate));
+                gmtCreate = gmtCreate.plusDays(1);
             }
         }
         if (a.getTime().equals(TYPE2.getType())) {
-            if ((date.getDayOfWeek().getValue() == 6 || date.getDayOfWeek().getValue() == 7)) {
-                return true;
-            }
-            example.getOredCriteria().get(0).andTimeGreaterThan(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            example.getOredCriteria().get(0).andTimeLessThanOrEqualTo(Date.from(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            List<ConfigLog> configLog = logMapper.selectByExample(example);
-            if (configLog == null || configLog.size() == 0) {
-                return false;
-            } else {
-                return true;
+            while (gmtCreate.isBefore(LocalDate.now())){
+                if ((gmtCreate.getDayOfWeek().getValue()==6)
+                        ||(gmtCreate.getDayOfWeek().getValue()==7)){
+                    gmtCreate = gmtCreate.plusDays(1);
+                    continue;
+                }else {
+                    insert(a,LocalDateToUdate(gmtCreate));
+                    gmtCreate = gmtCreate.plusDays(1);
+                }
+
             }
         }
         if (a.getTime().equals(TYPE3.getType())) {
-            if (!(date.getDayOfWeek().getValue() == 6 || date.getDayOfWeek().getValue() == 7)) {
-                return true;
-            }
-            example.getOredCriteria().get(0).andTimeGreaterThan(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            example.getOredCriteria().get(0).andTimeLessThanOrEqualTo(Date.from(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            List<ConfigLog> configLog = logMapper.selectByExample(example);
-            if (configLog == null || configLog.size() == 0) {
-                return false;
-            } else {
-                return true;
+            while (gmtCreate.isBefore(LocalDate.now())){
+                if ((gmtCreate.getDayOfWeek().getValue()==6)
+                        ||(gmtCreate.getDayOfWeek().getValue()==7)){
+                    insert(a,LocalDateToUdate(gmtCreate));
+                }
+                gmtCreate = gmtCreate.plusDays(1);
             }
         }
         if (a.getTime().equals(TYPE4.getType())) {
-            example.getOredCriteria().get(0).andTimeGreaterThan(
-                    Date.from(date.minusDays(date.getDayOfWeek().getValue() - 1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            example.getOredCriteria().get(0).andTimeLessThanOrEqualTo(
-                    Date.from(date.minusDays(date.getDayOfWeek().getValue() - 1).plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            List<ConfigLog> configLog = logMapper.selectByExample(example);
-            if (configLog == null || configLog.size() == 0) {
-                return false;
-            } else {
-                return true;
+            while (gmtCreate.isBefore(LocalDate.now())){
+                if ((gmtCreate.getDayOfWeek().getValue()==1)){
+                    insert(a,LocalDateToUdate(gmtCreate));
+                }
+                gmtCreate = gmtCreate.plusDays(1);
             }
         }
         if (a.getTime().equals(TYPE5.getType())) {
-            example.getOredCriteria().get(0).andTimeGreaterThan(
-                    Date.from(date.with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            example.getOredCriteria().get(0).andTimeLessThanOrEqualTo(
-                    Date.from(date.with(TemporalAdjusters.lastDayOfMonth()).plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            List<ConfigLog> configLog = logMapper.selectByExample(example);
-            if (configLog == null || configLog.size() == 0) {
-                return false;
-            } else {
-                return true;
+            while (gmtCreate.isBefore(LocalDate.now())){
+                if ((gmtCreate.getDayOfMonth()==1)){
+                    insert(a,LocalDateToUdate(gmtCreate));
+                }
+                gmtCreate = gmtCreate.plusDays(1);
             }
         }
-        return true;
+    }
+
+    private void insert(AccountConfig a, Date date) throws FFMException {
+        AccountForm accountForm = new AccountForm();
+        accountForm.setDescription(a.getDescription());
+        accountForm.setGmtCreate(date);
+        accountForm.setType(a.getType());
+        if (a.getIsSpending()) {
+            accountForm.setSpending(a.getMoney());
+            accountForm.setIncome(0L);
+            accountForm.setAccountNum(0 - a.getMoney());
+        } else {
+            accountForm.setSpending(0L);
+            accountForm.setIncome(a.getMoney());
+            accountForm.setAccountNum(a.getMoney());
+        }
+        accountService.addAccount(a.getUserId(), accountForm);
+        ConfigLog log = new ConfigLog();
+        log.setTime(date);
+        log.setConfigId(a.getId());
+        logMapper.insert(log);
     }
 }
 

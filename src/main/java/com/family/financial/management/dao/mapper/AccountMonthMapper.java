@@ -12,7 +12,7 @@ public interface AccountMonthMapper {
 
     int deleteByExample(AccountMonthExample example);
 
-    int deleteByPrimaryKey(Byte id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(AccountMonth record);
 
@@ -20,7 +20,7 @@ public interface AccountMonthMapper {
 
     List<AccountMonth> selectByExample(AccountMonthExample example);
 
-    AccountMonth selectByPrimaryKey(Byte id);
+    AccountMonth selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("record") AccountMonth record, @Param("example") AccountMonthExample example);
 

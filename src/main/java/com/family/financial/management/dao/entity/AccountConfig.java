@@ -1,6 +1,7 @@
 package com.family.financial.management.dao.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author 
@@ -21,6 +22,8 @@ public class AccountConfig implements Serializable {
     private String time;
 
     private String description;
+
+    private Date gmtCreate;
 
     private static final long serialVersionUID = 1L;
 
@@ -88,6 +91,14 @@ public class AccountConfig implements Serializable {
         this.description = description;
     }
 
+    public Date getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -107,7 +118,8 @@ public class AccountConfig implements Serializable {
             && (this.getIsSpending() == null ? other.getIsSpending() == null : this.getIsSpending().equals(other.getIsSpending()))
             && (this.getMoney() == null ? other.getMoney() == null : this.getMoney().equals(other.getMoney()))
             && (this.getTime() == null ? other.getTime() == null : this.getTime().equals(other.getTime()))
-            && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()));
+            && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
+            && (this.getGmtCreate() == null ? other.getGmtCreate() == null : this.getGmtCreate().equals(other.getGmtCreate()));
     }
 
     @Override
@@ -122,6 +134,7 @@ public class AccountConfig implements Serializable {
         result = prime * result + ((getMoney() == null) ? 0 : getMoney().hashCode());
         result = prime * result + ((getTime() == null) ? 0 : getTime().hashCode());
         result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
+        result = prime * result + ((getGmtCreate() == null) ? 0 : getGmtCreate().hashCode());
         return result;
     }
 
@@ -139,6 +152,7 @@ public class AccountConfig implements Serializable {
         sb.append(", money=").append(money);
         sb.append(", time=").append(time);
         sb.append(", description=").append(description);
+        sb.append(", gmtCreate=").append(gmtCreate);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

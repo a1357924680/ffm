@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(UserForm userForm,Long userId) throws FFMException {
+    public void updateUser(UserForm userForm,Long userId,String filePhoto) throws FFMException {
 
         User user = userMapper.selectByPrimaryKey(userId);
         if (user == null) {
@@ -106,15 +106,15 @@ public class UserServiceImpl implements UserService {
         user.setMobile(Long.parseLong(userForm.getMobile()));
         checkMobileNum(user.getMobile());
 
-        String originalFilename=userForm.getFilePhoto().getOriginalFilename();
-        String types=originalFilename.substring(originalFilename.lastIndexOf(".")+1).toLowerCase();
-        String newFileName=PHOTO_PATH.getMsg() + user.getUserId() + "." +types;
-        savePhoto(newFileName,userForm.getFilePhoto());
-        Base64.encodeBase64(file2Byte(newFileName));
-//        BASE64 base64 = new BASE64Encoder();
-        String code = Base64.encodeBase64String(file2Byte(newFileName));
-        code = "data:image/"+types+";base64,"+code;
-        user.setPhoto(code);
+//        String originalFilename=userForm.getFilePhoto().getOriginalFilename();
+//        String types=originalFilename.substring(originalFilename.lastIndexOf(".")+1).toLowerCase();
+//        String newFileName=PHOTO_PATH.getMsg() + user.getUserId() + "." +types;
+//        savePhoto(newFileName,userForm.getFilePhoto());
+//        Base64.encodeBase64(file2Byte(newFileName));
+////        BASE64 base64 = new BASE64Encoder();
+//        String code = Base64.encodeBase64String(file2Byte(newFileName));
+//        code = "data:image/"+types+";base64,"+code;
+        user.setPhoto(filePhoto);
         try {
             userMapper.updateByPrimaryKeySelective(user);
         }catch (Exception e){

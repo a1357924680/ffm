@@ -75,7 +75,7 @@ public class UserController extends BaseController{
         }
     }
 
-    @PostMapping("/getUser")
+    @GetMapping("/getUser")
     public Map<String, String> findUser(){
         try {
             User user = getUser();
@@ -103,8 +103,8 @@ public class UserController extends BaseController{
             userForm.setSex(sex);
             userForm.setUserName(userName);
             checkUserFormUpdate(userForm);
-            userService.updateUser(userForm,getUser().getId());
-            updateUserInfo(Long.parseLong(userForm.getUserId()));
+            userService.updateUser(userForm,getUser().getId(),filePhoto);
+            updateUserInfo(getUser().getId());
         } catch (FFMException e) {
             logger.error(e.getCode()+":"+e.getMsg());
             return getErrorResult(e.getCode(),e.getMsg());
@@ -149,9 +149,9 @@ public class UserController extends BaseController{
 
     }
     private void checkUserFormUpdate(UserForm userForm) throws FFMException{
-        if(userForm.getFilePhoto()==null){
-            throw new FFMException(100101,"头像不能为空");
-        }
+//        if(userForm.getFilePhoto()==null){
+//            throw new FFMException(100101,"头像不能为空");
+//        }
         if(userForm.getPassword()==null){
             throw new FFMException(100101,"密码不能为空");
         }

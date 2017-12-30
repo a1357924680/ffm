@@ -10,6 +10,7 @@
     <result column="money" jdbcType="BIGINT" property="money" />
     <result column="time" jdbcType="VARCHAR" property="time" />
     <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="gmt_create" jdbcType="DATE" property="gmtCreate" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, user_id, type, is_spending, money, time, description
+    id, name, user_id, type, is_spending, money, time, description, gmt_create
   </sql>
   <select id="selectByExample" parameterType="com.family.financial.management.dao.entity.AccountConfigExample" resultMap="BaseResultMap">
     select
@@ -113,10 +114,12 @@
   <insert id="insert" parameterType="com.family.financial.management.dao.entity.AccountConfig">
     insert into account_config (id, name, user_id, 
       type, is_spending, money, 
-      time, description)
+      time, description, gmt_create
+      )
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
       #{type,jdbcType=BIGINT}, #{isSpending,jdbcType=BIT}, #{money,jdbcType=BIGINT}, 
-      #{time,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR})
+      #{time,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=DATE}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.family.financial.management.dao.entity.AccountConfig">
     insert into account_config
@@ -145,6 +148,9 @@
       <if test="description != null">
         description,
       </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -170,6 +176,9 @@
       </if>
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=DATE},
       </if>
     </trim>
   </insert>
@@ -206,6 +215,9 @@
       <if test="record.description != null">
         description = #{record.description,jdbcType=VARCHAR},
       </if>
+      <if test="record.gmtCreate != null">
+        gmt_create = #{record.gmtCreate,jdbcType=DATE},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -220,7 +232,8 @@
       is_spending = #{record.isSpending,jdbcType=BIT},
       money = #{record.money,jdbcType=BIGINT},
       time = #{record.time,jdbcType=VARCHAR},
-      description = #{record.description,jdbcType=VARCHAR}
+      description = #{record.description,jdbcType=VARCHAR},
+      gmt_create = #{record.gmtCreate,jdbcType=DATE}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -249,6 +262,9 @@
       <if test="description != null">
         description = #{description,jdbcType=VARCHAR},
       </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=DATE},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -260,7 +276,8 @@
       is_spending = #{isSpending,jdbcType=BIT},
       money = #{money,jdbcType=BIGINT},
       time = #{time,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR}
+      description = #{description,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=DATE}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

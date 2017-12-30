@@ -205,14 +205,14 @@ public class GroupServiceImpl implements GroupService {
         List<String> memberSId = new ArrayList<>();
         CollectionUtils.addAll(memberSId,members);
         List<UserInfoForm> usersForm= new ArrayList<>();
-        memberSId.forEach(userid->{
+        for (int i = 0; i < memberSId.size(); i++) {
             UserInfoForm userInfoForm = new UserInfoForm();
             updateService.checkConfig(user.getId());
-            User tempUser = userMapper.selectByPrimaryKey(Long.parseLong(userid));
+            User tempUser = userMapper.selectByPrimaryKey(Long.parseLong(memberSId.get(i)));
             BeanUtils.copyProperties(tempUser, userInfoForm);
             userInfoForm.setMobile(String.valueOf(tempUser.getMobile()));
             usersForm.add(userInfoForm);
-        });
+        }
         GroupInfoForm groupInfoForm = new GroupInfoForm();
         BeanUtils.copyProperties(group,groupInfoForm);
         groupInfoForm.setUserInfoForms(usersForm);
