@@ -211,6 +211,11 @@ public class GroupServiceImpl implements GroupService {
             User tempUser = userMapper.selectByPrimaryKey(Long.parseLong(memberSId.get(i)));
             BeanUtils.copyProperties(tempUser, userInfoForm);
             userInfoForm.setMobile(String.valueOf(tempUser.getMobile()));
+            if (tempUser.getIsManager()){
+                userInfoForm.setIsManager(1);
+            }else {
+                userInfoForm.setIsManager(0);
+            }
             usersForm.add(userInfoForm);
         }
         GroupInfoForm groupInfoForm = new GroupInfoForm();

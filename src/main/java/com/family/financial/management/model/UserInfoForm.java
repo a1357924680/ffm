@@ -40,6 +40,16 @@ public class UserInfoForm {
 
     private Long balance;
 
+    private Integer isManager;
+
+    public Integer getIsManager() {
+        return isManager;
+    }
+
+    public void setIsManager(Integer isManager) {
+        this.isManager = isManager;
+    }
+
     public String getUserId() {
         return userId;
     }
