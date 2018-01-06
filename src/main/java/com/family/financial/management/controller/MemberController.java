@@ -60,7 +60,7 @@ public class MemberController extends BaseController{
     @GetMapping("/getUserMonthAccount")
     private Map<String,String> getUserMonthAccount(String userId, String year){
         try {
-            UserConfig userConfig = userConfigService.getUserConfig(getUser().getId(),StringUtils.praseLong(userId));
+            UserConfig userConfig = userConfigService.getUserConfig(StringUtils.praseLong(userId),getUser().getId());
             if (userConfig.getAllowType1().equals(0)){
                 throw new FFMException(34789234,"该用户设置不显示！");
             }
@@ -74,7 +74,7 @@ public class MemberController extends BaseController{
     @GetMapping("/getUserMonthDetail")
     private Map<String,String> getUserMonthDetail(String userId, ConditionForm conditionForm){
         try {
-            UserConfig userConfig = userConfigService.getUserConfig(getUser().getId(),StringUtils.praseLong(userId));
+            UserConfig userConfig = userConfigService.getUserConfig(StringUtils.praseLong(userId),getUser().getId());
             if (userConfig.getAllowType1().equals(0)||userConfig.getAllowType2().equals(0)){
                 throw new FFMException(34789234,"该用户设置不显示！");
             }

@@ -8,7 +8,6 @@
     <result column="allow_type2" jdbcType="INTEGER" property="allowType2" />
     <result column="allow_type3" jdbcType="INTEGER" property="allowType3" />
     <result column="allow_type4" jdbcType="INTEGER" property="allowType4" />
-    <result column="to_user_id" jdbcType="BIGINT" property="toUserId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, allow_type1, allow_type2, allow_type3, allow_type4, to_user_id
+    id, user_id, allow_type1, allow_type2, allow_type3, allow_type4
   </sql>
   <select id="selectByExample" parameterType="com.family.financial.management.dao.entity.UserConfigExample" resultMap="BaseResultMap">
     select
@@ -111,11 +110,11 @@
   </delete>
   <insert id="insert" parameterType="com.family.financial.management.dao.entity.UserConfig">
     insert into user_config (id, user_id, allow_type1, 
-      allow_type2, allow_type3, allow_type4, 
-      to_user_id)
+      allow_type2, allow_type3, allow_type4
+      )
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{allowType1,jdbcType=INTEGER}, 
-      #{allowType2,jdbcType=INTEGER}, #{allowType3,jdbcType=INTEGER}, #{allowType4,jdbcType=INTEGER}, 
-      #{toUserId,jdbcType=BIGINT})
+      #{allowType2,jdbcType=INTEGER}, #{allowType3,jdbcType=INTEGER}, #{allowType4,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.family.financial.management.dao.entity.UserConfig">
     insert into user_config
@@ -138,9 +137,6 @@
       <if test="allowType4 != null">
         allow_type4,
       </if>
-      <if test="toUserId != null">
-        to_user_id,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -160,9 +156,6 @@
       </if>
       <if test="allowType4 != null">
         #{allowType4,jdbcType=INTEGER},
-      </if>
-      <if test="toUserId != null">
-        #{toUserId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -193,9 +186,6 @@
       <if test="record.allowType4 != null">
         allow_type4 = #{record.allowType4,jdbcType=INTEGER},
       </if>
-      <if test="record.toUserId != null">
-        to_user_id = #{record.toUserId,jdbcType=BIGINT},
-      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -208,8 +198,7 @@
       allow_type1 = #{record.allowType1,jdbcType=INTEGER},
       allow_type2 = #{record.allowType2,jdbcType=INTEGER},
       allow_type3 = #{record.allowType3,jdbcType=INTEGER},
-      allow_type4 = #{record.allowType4,jdbcType=INTEGER},
-      to_user_id = #{record.toUserId,jdbcType=BIGINT}
+      allow_type4 = #{record.allowType4,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -232,9 +221,6 @@
       <if test="allowType4 != null">
         allow_type4 = #{allowType4,jdbcType=INTEGER},
       </if>
-      <if test="toUserId != null">
-        to_user_id = #{toUserId,jdbcType=BIGINT},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -244,8 +230,7 @@
       allow_type1 = #{allowType1,jdbcType=INTEGER},
       allow_type2 = #{allowType2,jdbcType=INTEGER},
       allow_type3 = #{allowType3,jdbcType=INTEGER},
-      allow_type4 = #{allowType4,jdbcType=INTEGER},
-      to_user_id = #{toUserId,jdbcType=BIGINT}
+      allow_type4 = #{allowType4,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
