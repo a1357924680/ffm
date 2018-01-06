@@ -127,6 +127,7 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
         List<AccountMonth> accountMonthList = accountMonthMapper.selectByExample(example);
         if ((null == accountMonthList) || (0 == accountMonthList.size())) {
             addYearBill(account.getUserId(), Long.parseLong(new SimpleDateFormat("YYYY").format(account.getGmtCreate()).toString()));
+            insertMonthAccount(account);
         } else {
             AccountMonth accountMonth = accountMonthList.get(0);
             accountMonth.setSpend(accountMonth.getSpend() + account.getSpending());
@@ -150,8 +151,8 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
         criteria.andMonthEqualTo(month);
         List<AccountMonth> accountMonthList = accountMonthMapper.selectByExample(example);
         AccountMonth accountMonth = accountMonthList.get(0);
-        accountMonth.setSpend(accountMonth.getSpend() + account.getSpending());
-        accountMonth.setIncome(accountMonth.getIncome() + account.getIncome());
+        accountMonth.setSpend(accountMonth.getSpend() - account.getSpending());
+        accountMonth.setIncome(accountMonth.getIncome() - account.getIncome());
         accountMonth.setBalance(accountMonth.getIncome() - accountMonth.getSpend());
         accountMonthMapper.updateByPrimaryKey(accountMonth);
     }
@@ -188,6 +189,7 @@ public class UpdateAllAccountServiceImpl implements UpdateAllAccountService {
         example.createCriteria().andUserIdEqualTo(userId);
         List<AccountConfig> configs = configMapper.selectByExample(example);
         for (AccountConfig a : configs) {
+
             checkDone(a);
         }
 

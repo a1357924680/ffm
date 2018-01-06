@@ -19,15 +19,17 @@ public class UserConfigServiceImpl implements UserConfigService {
     private UserConfigMapper configMapper;
 
     @Override
-    public UserConfig getUserConfig(Long userId) throws FFMException {
+    public UserConfig getUserConfig(Long userId,Long toUser) throws FFMException {
         UserConfigExample example = new UserConfigExample();
-        example.createCriteria().andUserIdBetween(userId,userId);
+        example.createCriteria().andUserIdBetween(userId,userId).andToUserIdBetween(toUser,toUser);
         return configMapper.selectByExample(example).get(0);
     }
 
     @Override
-    public void insertUserConfig(Long userId, int type1, int type2) throws FFMException {
+    public void insertUserConfig(Long userId, Long toUser,int type1, int type2) throws FFMException {
         UserConfig userConfig = new UserConfig();
+        userConfig.setUserId(userId);
+        userConfig.setToUserId(toUser);
         userConfig.setAllowType1(type1);
         userConfig.setAllowType2(type2);
         userConfig.setUserId(userId);
@@ -35,9 +37,9 @@ public class UserConfigServiceImpl implements UserConfigService {
     }
 
     @Override
-    public void updateUserConfig(Long userId, Integer type1, Integer type2) throws FFMException {
+    public void updateUserConfig(Long userId,Long toUser, Integer type1, Integer type2) throws FFMException {
         UserConfigExample example = new UserConfigExample();
-        example.createCriteria().andUserIdBetween(userId,userId);
+        example.createCriteria().andUserIdBetween(userId,userId).andToUserIdBetween(toUser,toUser);
         UserConfig userConfig = configMapper.selectByExample(example).get(0);
         if (type1!=null){
             userConfig.setAllowType1(type1);

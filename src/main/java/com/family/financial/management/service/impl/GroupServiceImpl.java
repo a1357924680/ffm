@@ -8,6 +8,7 @@ import com.family.financial.management.model.Request;
 import com.family.financial.management.model.UserInfoForm;
 import com.family.financial.management.service.interfaces.GroupService;
 import com.family.financial.management.service.interfaces.UpdateAllAccountService;
+import com.family.financial.management.utils.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static com.family.financial.management.emun.FFMExceptionEnum.*;
 import static com.family.financial.management.utils.Const.ALLOW_APPLY;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created by zhangyiping on 2017/9/20.
@@ -37,7 +39,8 @@ public class GroupServiceImpl implements GroupService {
     GroupsMapper groupsMapper;
     @Resource
     GroupRequestMapper groupRequestMapper;
-
+    @Resource
+    UserConfigMapper userConfigMapper;
     @Autowired
     private UpdateAllAccountService updateService;
 
@@ -75,6 +78,8 @@ public class GroupServiceImpl implements GroupService {
             u.setIsManager(false);
             u.setGroupId((long) 0);
             userMapper.updateByPrimaryKey(u);
+//            删除用户配置
+            dropUserConfig(u.getId());
         });
 
         groupsMapper.deleteByPrimaryKey(user.getGroupId());
@@ -134,15 +139,17 @@ public class GroupServiceImpl implements GroupService {
                 fromUser.setIsManager(false);
                 userMapper.updateByPrimaryKeySelective(fromUser);
                 Groups group = groupsMapper.selectByPrimaryKey(groupRequest.getGroupId());
+                insertUserConfig(group,fromUser);
                 group.setAllIncome(group.getAllIncome() + fromUser.getAllIncome());
                 group.setAllSpending(group.getAllSpending() + fromUser.getAllSpending());
                 group.setBalance(group.getAllIncome() - group.getAllSpending());
                 group.setGroupMembers(group.getGroupMembers() + "," + fromUser.getId());
                 groupsMapper.updateByPrimaryKeySelective(group);
-
             }
         }
     }
+
+
 
     @Override
     public List<Request> getGroupRequests(User user) throws FFMException {
@@ -195,6 +202,8 @@ public class GroupServiceImpl implements GroupService {
         removeUser.setIsManager(false);
         removeUser.setGroupId((long) 0);
         userMapper.updateByPrimaryKey(removeUser);
+//        删除配置
+        dropUserConfig(user.getId());
     }
 
     @Override
@@ -225,5 +234,32 @@ public class GroupServiceImpl implements GroupService {
         return groupInfoForm;
     }
 
+    private void insertUserConfig(Groups group, User fromUser) throws FFMException {
+        UserConfig userConfig = new UserConfig();
+        userConfig.setUserId(fromUser.getId());
+        userConfig.setAllowType1(1);
+        userConfig.setAllowType2(1);
+        String[] ids = group.getGroupMembers().split(",");
+        /*插入该用户发起的*/
+        for (String id:ids) {
+            userConfig.setToUserId(StringUtils.praseLong(id));
+            userConfigMapper.insertSelective(userConfig);
+        }
+        userConfig.setAllowType1(0);
+        userConfig.setAllowType2(0);
+        userConfig.setToUserId(fromUser.getId());
+        /*插入该用户为接收者的*/
+        for (String id:ids) {
+            userConfig.setUserId(StringUtils.praseLong(id));
+            userConfigMapper.insertSelective(userConfig);
+        }
+    }
+
+    private void dropUserConfig(Long id) {
+        UserConfigExample example = new UserConfigExample();
+        example.createCriteria().andUserIdBetween(id,id);
+        example.or().andToUserIdBetween(id,id);
+        userConfigMapper.deleteByExample(example);
+    }
 
 }

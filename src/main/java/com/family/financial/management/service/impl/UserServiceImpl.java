@@ -7,11 +7,9 @@ import com.family.financial.management.dao.mapper.UserMapper;
 import com.family.financial.management.model.UserForm;
 import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.service.interfaces.UpdateAllAccountService;
-import com.family.financial.management.service.interfaces.UserConfigService;
 import com.family.financial.management.service.interfaces.UserService;
 
 import net.coobird.thumbnailator.Thumbnails;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.family.financial.management.constant.FFMConstant.photo;
-import static com.family.financial.management.emun.FFMEnum.PHOTO_PATH;
 import static com.family.financial.management.emun.FFMExceptionEnum.*;
 import static com.family.financial.management.utils.Const.MAX_REGISTER_NUM;
 
@@ -41,8 +38,6 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Resource
     private AccountMonthMapper accountMonthMapper;
-    @Autowired
-    private UserConfigService userConfigService;
     @Autowired
     private UpdateAllAccountService updateAllAccountService;
 
@@ -85,7 +80,6 @@ public class UserServiceImpl implements UserService {
         user.setPhoto(photo);
         try {
             userMapper.insertSelective(user);
-            userConfigService.insertUserConfig(user.getId(),0,0);
         }catch (Exception e){
             throw new FFMException(SYSTEM_ERROR);
         }
@@ -117,6 +111,7 @@ public class UserServiceImpl implements UserService {
         try {
             userMapper.updateByPrimaryKeySelective(user);
         }catch (Exception e){
+            System.out.println(e.getMessage());
             throw new FFMException(SYSTEM_ERROR);
         }
     }

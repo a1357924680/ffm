@@ -8,6 +8,7 @@ import com.family.financial.management.exception.FFMException;
 import com.family.financial.management.model.GroupInfoForm;
 import com.family.financial.management.model.Request;
 import com.family.financial.management.service.interfaces.GroupService;
+import com.family.financial.management.service.interfaces.UserConfigService;
 import com.family.financial.management.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,8 @@ public class GroupController extends BaseController{
     @Autowired
     private GroupService groupService;
 
+    @Autowired
+    private UserConfigService userConfigService;
     @PostMapping("/createGroup")
     public Map<String,String> createGroup(@RequestParam(defaultValue = "") String groupName){
         try {

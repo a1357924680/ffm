@@ -79,6 +79,7 @@ public class UserController extends BaseController{
     public Map<String, String> findUser(){
         try {
             User user = getUser();
+            updateUserInfo(user.getId());
             return getSuccessResult("user",user);
         } catch (FFMException e) {
             return getErrorResult(e.getCode(),e.getMsg());

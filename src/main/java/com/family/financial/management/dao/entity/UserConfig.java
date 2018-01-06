@@ -30,6 +30,11 @@ public class UserConfig implements Serializable {
      */
     private Integer allowType4;
 
+    /**
+     * 配置对象的
+     */
+    private Long toUserId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -80,6 +85,14 @@ public class UserConfig implements Serializable {
         this.allowType4 = allowType4;
     }
 
+    public Long getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(Long toUserId) {
+        this.toUserId = toUserId;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -97,7 +110,8 @@ public class UserConfig implements Serializable {
             && (this.getAllowType1() == null ? other.getAllowType1() == null : this.getAllowType1().equals(other.getAllowType1()))
             && (this.getAllowType2() == null ? other.getAllowType2() == null : this.getAllowType2().equals(other.getAllowType2()))
             && (this.getAllowType3() == null ? other.getAllowType3() == null : this.getAllowType3().equals(other.getAllowType3()))
-            && (this.getAllowType4() == null ? other.getAllowType4() == null : this.getAllowType4().equals(other.getAllowType4()));
+            && (this.getAllowType4() == null ? other.getAllowType4() == null : this.getAllowType4().equals(other.getAllowType4()))
+            && (this.getToUserId() == null ? other.getToUserId() == null : this.getToUserId().equals(other.getToUserId()));
     }
 
     @Override
@@ -110,6 +124,7 @@ public class UserConfig implements Serializable {
         result = prime * result + ((getAllowType2() == null) ? 0 : getAllowType2().hashCode());
         result = prime * result + ((getAllowType3() == null) ? 0 : getAllowType3().hashCode());
         result = prime * result + ((getAllowType4() == null) ? 0 : getAllowType4().hashCode());
+        result = prime * result + ((getToUserId() == null) ? 0 : getToUserId().hashCode());
         return result;
     }
 
@@ -125,6 +140,7 @@ public class UserConfig implements Serializable {
         sb.append(", allowType2=").append(allowType2);
         sb.append(", allowType3=").append(allowType3);
         sb.append(", allowType4=").append(allowType4);
+        sb.append(", toUserId=").append(toUserId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -483,6 +483,66 @@ public class UserConfigExample {
             addCriterion("allow_type4 not between", value1, value2, "allowType4");
             return (Criteria) this;
         }
+
+        public Criteria andToUserIdIsNull() {
+            addCriterion("to_user_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andToUserIdIsNotNull() {
+            addCriterion("to_user_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andToUserIdEqualTo(Long value) {
+            addCriterion("to_user_id =", value, "toUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andToUserIdNotEqualTo(Long value) {
+            addCriterion("to_user_id <>", value, "toUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andToUserIdGreaterThan(Long value) {
+            addCriterion("to_user_id >", value, "toUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andToUserIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("to_user_id >=", value, "toUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andToUserIdLessThan(Long value) {
+            addCriterion("to_user_id <", value, "toUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andToUserIdLessThanOrEqualTo(Long value) {
+            addCriterion("to_user_id <=", value, "toUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andToUserIdIn(List<Long> values) {
+            addCriterion("to_user_id in", values, "toUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andToUserIdNotIn(List<Long> values) {
+            addCriterion("to_user_id not in", values, "toUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andToUserIdBetween(Long value1, Long value2) {
+            addCriterion("to_user_id between", value1, value2, "toUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andToUserIdNotBetween(Long value1, Long value2) {
+            addCriterion("to_user_id not between", value1, value2, "toUserId");
+            return (Criteria) this;
+        }
     }
 
     /**
