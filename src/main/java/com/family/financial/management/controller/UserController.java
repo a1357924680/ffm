@@ -68,7 +68,7 @@ public class UserController extends BaseController{
                 throw new FFMException(WRONG_PASSWORD);
             }
             session.setAttribute(Const.SESSION_USER, user);
-            updateService.checkConfig(user.getId());
+//            updateService.checkConfig(user.getId());
             return getSuccessResult("user",user);
         } catch (FFMException e) {
             return getErrorResult(e.getCode(),e.getMsg());

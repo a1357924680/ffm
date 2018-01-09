@@ -3,13 +3,17 @@ package com.family.financial.management.service.impl;
 import com.family.financial.management.dao.entity.*;
 
 import com.family.financial.management.dao.mapper.AccountMonthMapper;
+import com.family.financial.management.dao.mapper.GroupsMapper;
 import com.family.financial.management.dao.mapper.UserMapper;
 import com.family.financial.management.model.UserForm;
 import com.family.financial.management.exception.FFMException;
+import com.family.financial.management.model.UserInfoForm;
 import com.family.financial.management.service.interfaces.UpdateAllAccountService;
 import com.family.financial.management.service.interfaces.UserService;
 
+import com.family.financial.management.utils.StringUtils;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,10 +45,28 @@ public class UserServiceImpl implements UserService {
     private AccountMonthMapper accountMonthMapper;
     @Autowired
     private UpdateAllAccountService updateAllAccountService;
-
+    @Resource
+    private GroupsMapper groupsMapper;
+    @Autowired
+    private UpdateAllAccountService updateService;
     @Override
     public User getUser(String userId) throws FFMException {
         Optional<User> user = Optional.ofNullable(selectUserByUserId(userId));
+        if (user.isPresent()){
+            if (user.get().getGroupId()==0){
+
+            }else {
+                Groups group = groupsMapper.selectByPrimaryKey(user.get().getGroupId());
+                String[] members = group.getGroupMembers().split(",");
+                List<String> memberSId = new ArrayList<>();
+                CollectionUtils.addAll(memberSId,members);
+                List<UserInfoForm> usersForm= new ArrayList<>();
+                for (int i = 0; i < memberSId.size(); i++) {
+                    updateService.checkConfig(StringUtils.praseLong(memberSId.get(i)));
+                }
+            }
+        }
+
         return user.orElseThrow(()->new FFMException(NO_SUCH_USER));
     }
 
@@ -81,6 +104,7 @@ public class UserServiceImpl implements UserService {
         try {
             userMapper.insertSelective(user);
         }catch (Exception e){
+            System.out.println(e.getMessage());
             throw new FFMException(SYSTEM_ERROR);
         }
         //注册用户，添加本年度的月度信息

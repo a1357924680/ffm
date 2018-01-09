@@ -216,7 +216,7 @@ public class GroupServiceImpl implements GroupService {
         List<UserInfoForm> usersForm= new ArrayList<>();
         for (int i = 0; i < memberSId.size(); i++) {
             UserInfoForm userInfoForm = new UserInfoForm();
-            updateService.checkConfig(user.getId());
+//            updateService.checkConfig(user.getId());
             User tempUser = userMapper.selectByPrimaryKey(Long.parseLong(memberSId.get(i)));
             BeanUtils.copyProperties(tempUser, userInfoForm);
             userInfoForm.setMobile(String.valueOf(tempUser.getMobile()));
